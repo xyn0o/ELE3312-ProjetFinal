@@ -1,0 +1,61 @@
+\doxysection{Game.\+h}
+\hypertarget{_game_8h_source}{}\label{_game_8h_source}\index{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Inc/Game.h@{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Inc/Game.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Game.h}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \ Created\ on:\ Oct\ 17,\ 2024}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ \ \ \ \ \ Author:\ joerg}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ INC\_GAME\_H\_}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ INC\_GAME\_H\_}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}ili9341.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}ili9341\_gfx.h"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}Character.h"{}}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ SCREEN\_X\ 320}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ SCREEN\_Y\ 240}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ SCREEN\_CENTER\_X\ 160}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ SCREEN\_CENTER\_Y\ 120}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ MAX\_TILE\_X\ SCREEN\_X/10}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ MAX\_TILE\_Y\ SCREEN\_Y/10}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ STEP\_SIZE\ 2}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ NUM\_PLAYERS\ 2}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ LOCAL\_PLAYER\_ID\ 0}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ ENEMY\_PLAYER\_ID\ 1}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ CHOOSE\_PLAYER,\ INIT\_MAZE,\ WANDER\_MAZE,\ BATTLE}
+\DoxyCodeLine{00030\ \}\ game\_state\_t;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00033\ \ \ \ \ uint8\_t\ is\_x\_ok;}
+\DoxyCodeLine{00034\ \ \ \ \ uint8\_t\ is\_y\_ok;}
+\DoxyCodeLine{00035\ \ \ \ \ uint8\_t\ is\_enemy;}
+\DoxyCodeLine{00036\ \}\ \mbox{\hyperlink{structboundary__check__t}{boundary\_check\_t}};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00039\ \ \ \ \ \ uint16\_t\ width;}
+\DoxyCodeLine{00040\ \ \ \ \ \ uint16\_t\ height;}
+\DoxyCodeLine{00041\ \ \ \ \ \ \textcolor{keywordtype}{int}\ id;}
+\DoxyCodeLine{00042\ \ \ \ \ \ uint16\_t\ *data;}
+\DoxyCodeLine{00043\ \}\ \mbox{\hyperlink{structsprite__metadata__t}{sprite\_metadata\_t}};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \mbox{\hyperlink{structsprite__metadata__t}{sprite\_metadata\_t}}\ *getSprite(uint16\_t\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00046\ \mbox{\hyperlink{structsprite__metadata__t}{sprite\_metadata\_t}}\ *\ getFigureSprite(\mbox{\hyperlink{structposition__t}{position\_t}}\ delta,\ character\_type\_t\ type);}
+\DoxyCodeLine{00047\ \textcolor{keywordtype}{void}\ drawBitmap(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ uint16\_t\ *data,\ \mbox{\hyperlink{structposition__t}{position\_t}}\ pos,\ uint16\_t\ width,\ uint16\_t\ height);}
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{void}\ drawMaze(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ \mbox{\hyperlink{structplayer__t}{player\_t}}\ *players);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ uint16\_t\ getTileCoord(int16\_t\ x,\ int16\_t\ y);}
+\DoxyCodeLine{00051\ \textcolor{keywordtype}{void}\ checkBoundary(int16\_t\ x,\ int16\_t\ y,\ \mbox{\hyperlink{structplayer__t}{player\_t}}\ *players,\ uint16\_t\ *maze,\ \mbox{\hyperlink{structboundary__check__t}{boundary\_check\_t}}\ *bc);}
+\DoxyCodeLine{00052\ uint8\_t\ updatePosition(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ \mbox{\hyperlink{structposition__t}{position\_t}}\ new\_pos,\ \mbox{\hyperlink{structplayer__t}{player\_t}}\ *players);}
+\DoxyCodeLine{00053\ \textcolor{keywordtype}{void}\ drawRemotePlayer(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ \mbox{\hyperlink{structplayer__t}{player\_t}}\ *player);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ INC\_GAME\_H\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

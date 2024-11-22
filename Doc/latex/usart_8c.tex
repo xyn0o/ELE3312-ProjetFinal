@@ -1,0 +1,56 @@
+\doxysection{C\+:/\+Users/joerg/\+Documents/\+Embedded\+\_\+cours/final/gabari/\+ELE3312\+\_\+\+Project/\+Core/\+Src/usart.c File Reference}
+\hypertarget{usart_8c}{}\label{usart_8c}\index{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Src/usart.c@{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Src/usart.c}}
+
+
+This file provides code for the configuration of the USART instances.  
+
+
+{\ttfamily \#include "{}usart.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{usart_8c_a0664dce420227295e70164b7a89f0771}\label{usart_8c_a0664dce420227295e70164b7a89f0771} 
+void {\bfseries MX\+\_\+\+UART5\+\_\+\+Init} (void)
+\item 
+void \mbox{\hyperlink{usart_8c_a62a25476866998c7aadfb5c0864fa349}{HAL\+\_\+\+UART\+\_\+\+Msp\+Init}} (UART\+\_\+\+Handle\+Type\+Def \texorpdfstring{$\ast$}{*}uart\+Handle)
+\item 
+void \mbox{\hyperlink{usart_8c_a94cd2c58add4f2549895a03bf267622e}{HAL\+\_\+\+UART\+\_\+\+Msp\+De\+Init}} (UART\+\_\+\+Handle\+Type\+Def \texorpdfstring{$\ast$}{*}uart\+Handle)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{usart_8c_a25a82fcf0cd24eb6d39977cb5864cec8}\label{usart_8c_a25a82fcf0cd24eb6d39977cb5864cec8} 
+UART\+\_\+\+Handle\+Type\+Def {\bfseries huart5}
+\item 
+\Hypertarget{usart_8c_a794700eeb880a56b4598f4361b117881}\label{usart_8c_a794700eeb880a56b4598f4361b117881} 
+DMA\+\_\+\+Handle\+Type\+Def {\bfseries hdma\+\_\+uart5\+\_\+rx}
+\item 
+\Hypertarget{usart_8c_a78ea5a382a3d999e9e2f71f6f2688cc7}\label{usart_8c_a78ea5a382a3d999e9e2f71f6f2688cc7} 
+DMA\+\_\+\+Handle\+Type\+Def {\bfseries hdma\+\_\+uart5\+\_\+tx}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This file provides code for the configuration of the USART instances. 
+
+\begin{DoxyAttention}{Attention}
+
+\end{DoxyAttention}
+Copyright (c) 2024 STMicroelectronics. All rights reserved.
+
+This software is licensed under terms that can be found in the LICENSE file in the root directory of this software component. If no LICENSE file comes with this software, it is provided AS-\/\+IS. 
+
+\doxysubsection{Function Documentation}
+\Hypertarget{usart_8c_a94cd2c58add4f2549895a03bf267622e}\index{usart.c@{usart.c}!HAL\_UART\_MspDeInit@{HAL\_UART\_MspDeInit}}
+\index{HAL\_UART\_MspDeInit@{HAL\_UART\_MspDeInit}!usart.c@{usart.c}}
+\doxysubsubsection{\texorpdfstring{HAL\_UART\_MspDeInit()}{HAL\_UART\_MspDeInit()}}
+{\footnotesize\ttfamily \label{usart_8c_a94cd2c58add4f2549895a03bf267622e} 
+void HAL\+\_\+\+UART\+\_\+\+Msp\+De\+Init (\begin{DoxyParamCaption}\item[{UART\+\_\+\+Handle\+Type\+Def \texorpdfstring{$\ast$}{*}}]{uart\+Handle}{}\end{DoxyParamCaption})}
+
+UART5 GPIO Configuration PC12 -\/-\/-\/-\/-\/-\/\texorpdfstring{$>$}{>} UART5\+\_\+\+TX PD2 -\/-\/-\/-\/-\/-\/\texorpdfstring{$>$}{>} UART5\+\_\+\+RX\Hypertarget{usart_8c_a62a25476866998c7aadfb5c0864fa349}\index{usart.c@{usart.c}!HAL\_UART\_MspInit@{HAL\_UART\_MspInit}}
+\index{HAL\_UART\_MspInit@{HAL\_UART\_MspInit}!usart.c@{usart.c}}
+\doxysubsubsection{\texorpdfstring{HAL\_UART\_MspInit()}{HAL\_UART\_MspInit()}}
+{\footnotesize\ttfamily \label{usart_8c_a62a25476866998c7aadfb5c0864fa349} 
+void HAL\+\_\+\+UART\+\_\+\+Msp\+Init (\begin{DoxyParamCaption}\item[{UART\+\_\+\+Handle\+Type\+Def \texorpdfstring{$\ast$}{*}}]{uart\+Handle}{}\end{DoxyParamCaption})}
+
+UART5 GPIO Configuration PC12 -\/-\/-\/-\/-\/-\/\texorpdfstring{$>$}{>} UART5\+\_\+\+TX PD2 -\/-\/-\/-\/-\/-\/\texorpdfstring{$>$}{>} UART5\+\_\+\+RX

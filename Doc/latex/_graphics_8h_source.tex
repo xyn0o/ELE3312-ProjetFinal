@@ -1,0 +1,30 @@
+\doxysection{Graphics.\+h}
+\hypertarget{_graphics_8h_source}{}\label{_graphics_8h_source}\index{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Inc/Graphics.h@{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Inc/Graphics.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Graphics.h}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \ Created\ on:\ Oct\ 22,\ 2024}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ \ \ \ \ \ Author:\ joerg}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ INC\_GRAPHICS\_H\_}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ INC\_GRAPHICS\_H\_}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}ili9341.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}ili9341\_gfx.h"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}math.h"{}}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keywordtype}{void}\ drawGrave(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ int16\_t\ x,\ int16\_t\ y);}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keywordtype}{void}\ writeFillArcHelper(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ int16\_t\ cx,\ int16\_t\ cy,\ int16\_t\ oradius,\ int16\_t\ iradius,\ \textcolor{keywordtype}{float}\ start,\ \textcolor{keywordtype}{float}\ end,\ ili9341\_color\_t\ color);}
+\DoxyCodeLine{00019\ \textcolor{keywordtype}{void}\ fillArc(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ int16\_t\ x,\ int16\_t\ y,\ int16\_t\ r1,\ int16\_t\ r2,\ \textcolor{keywordtype}{float}\ start,\ \textcolor{keywordtype}{float}\ end,\ ili9341\_color\_t\ color);}
+\DoxyCodeLine{00020\ \textcolor{keywordtype}{void}\ drawPacMan(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ uint16\_t\ x,\ uint16\_t\ y,\ ili9341\_color\_t\ color);}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keywordtype}{void}\ drawGhost(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ uint16\_t\ x,\ uint16\_t\ y,\ ili9341\_color\_t\ color);}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ INC\_GRAPHICS\_H\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

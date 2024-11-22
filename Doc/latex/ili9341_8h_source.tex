@@ -1,0 +1,277 @@
+\doxysection{ili9341.\+h}
+\hypertarget{ili9341_8h_source}{}\label{ili9341_8h_source}\index{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Inc/ili9341.h@{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Inc/ili9341.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ ili9341.h}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \ Created\ on:\ Nov\ 28,\ 2019}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ \ \ \ \ \ Author:\ andrew}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ \_\_ILI9341\_H}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ \_\_ILI9341\_H}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00012\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ includes\ -\/-\/}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ STM32F4}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#if\ defined\ (STM32L4)}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}stm32l4xx\_hal.h"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#elif\ defined(STM32F0)}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}stm32f0xx\_hal.h"{}}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#elif\ defined(STM32F4)}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}stm32f4xx\_hal.h"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#elif\ defined(STM32G4)}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}stm32g4xx\_hal.h"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#elif\ defined(STM32G0)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}stm32g0xx\_hal.h"{}}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ defines\ -\/-\/}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ \_\_GPIO\_PIN\_CLR\_\_\ \ \ \ \ GPIO\_PIN\_RESET}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ \_\_GPIO\_PIN\_SET\_\_\ \ \ \ \ GPIO\_PIN\_SET}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ \_\_SPI\_MAX\_DELAY\_\_\ \ \ \ HAL\_MAX\_DELAY}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ \_\_SPI\_TX\_BLOCK\_MAX\_\_\ (1U\ *\ 1024U)\ }\textcolor{comment}{//\ 1024\ 16-\/bit\ words\ (2\ KiB)}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ macros\ -\/-\/}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ \_\_MSBYTEu16(u)\ (uint8\_t)(((uint16\_t)(u)\ >>\ 8U)\ \&\ 0xFF)}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ \_\_LSBYTEu16(u)\ (uint8\_t)(((uint16\_t)(u)\ \ \ \ \ \ )\ \&\ 0xFF)}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ convert\ value\ at\ addr\ to\ little-\/endian\ (16-\/bit)}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ \_\_LEu16(addr)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\ \ \ \ (\ (\ (((uint16\_t)(*(((uint8\_t\ *)(addr))\ +\ 1)))\ \ \ \ \ \ )\ |\ \(\backslash\)}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (((uint16\_t)(*(((uint8\_t\ *)(addr))\ +\ 0)))\ <<\ 8U)\ )\ )}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{//\ convert\ value\ at\ addr\ to\ little-\/endian\ (32-\/bit)}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ \_\_LEu32(addr)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\ \ \ \ (\ (\ (((uint32\_t)(*(((uint8\_t\ *)(addr))\ +\ 3)))\ \ \ \ \ \ \ )\ |\ \(\backslash\)}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (((uint32\_t)(*(((uint8\_t\ *)(addr))\ +\ 2)))\ <<\ \ 8U)\ |\ \(\backslash\)}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (((uint32\_t)(*(((uint8\_t\ *)(addr))\ +\ 1)))\ <<\ 16U)\ |\ \(\backslash\)}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (((uint32\_t)(*(((uint8\_t\ *)(addr))\ +\ 0)))\ <<\ 24U)\ )\ )}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ \_\_SWAP(t,\ a,\ b)\ \{\ t\ s;\ s\ =\ a;\ a\ =\ b;\ b\ =\ s;\ \}}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{comment}{//\ resulting\ integer\ width\ given\ as\ t,\ e.g.\ \_\_FROUND(uint16\_t,\ -\/1.3)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ \_\_FROUND(t,\ x)\ ((x)\ <\ 0.0F\ ?\ -\/((t)((-\/(x))\ +\ 0.5F))\ :\ (t)((x)\ +\ 0.5F))}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ \_\_FABS(v)\ ((v)\ <\ 0.0F\ ?\ -\/(v)\ :\ (v))}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ ibOK(x)\ \ (0\ !=\ !!(x))}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ ibNOT(x)\ (0\ ==\ !!(x))}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ exported\ types\ -\/-\/}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structili9341}{ili9341}}\ \mbox{\hyperlink{structili9341}{ili9341\_t}};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00071\ \{}
+\DoxyCodeLine{00072\ \ \ ibFalse\ =\ 0,\ ibNo\ \ =\ ibFalse,}
+\DoxyCodeLine{00073\ \ \ ibTrue\ \ =\ 1,\ ibYes\ =\ ibTrue,}
+\DoxyCodeLine{00074\ \}}
+\DoxyCodeLine{00075\ ili9341\_bool\_t;}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{keyword}{typedef}\ ili9341\_bool\_t\ ibool\_t;\ \textcolor{comment}{//\ short-\/hand\ alias}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00080\ \{}
+\DoxyCodeLine{00081\ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00082\ \ \ \{}
+\DoxyCodeLine{00083\ \ \ \ \ uint16\_t\ x;}
+\DoxyCodeLine{00084\ \ \ \ \ uint16\_t\ width;}
+\DoxyCodeLine{00085\ \ \ \};}
+\DoxyCodeLine{00086\ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00087\ \ \ \{}
+\DoxyCodeLine{00088\ \ \ \ \ uint16\_t\ y;}
+\DoxyCodeLine{00089\ \ \ \ \ uint16\_t\ height;}
+\DoxyCodeLine{00090\ \ \ \};}
+\DoxyCodeLine{00091\ \}}
+\DoxyCodeLine{00092\ \mbox{\hyperlink{structili9341__two__dimension__t}{ili9341\_two\_dimension\_t}};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00095\ \{}
+\DoxyCodeLine{00096\ \ \ \textcolor{comment}{//\ orientation\ is\ based\ on\ position\ of\ board\ pins\ when\ looking\ at\ the\ screen}}
+\DoxyCodeLine{00097\ \ \ isoNONE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ -\/1,}
+\DoxyCodeLine{00098\ \ \ isoDown,\ \ \ isoPortrait\ \ \ \ \ \ =\ isoDown,\ \ \textcolor{comment}{//\ =\ 0}}
+\DoxyCodeLine{00099\ \ \ isoRight,\ \ isoLandscape\ \ \ \ \ =\ isoRight,\ \textcolor{comment}{//\ =\ 1}}
+\DoxyCodeLine{00100\ \ \ isoUp,\ \ \ \ \ isoPortraitFlip\ \ =\ isoUp,\ \ \ \ \textcolor{comment}{//\ =\ 2}}
+\DoxyCodeLine{00101\ \ \ isoLeft,\ \ \ isoLandscapeFlip\ =\ isoLeft,\ \ \textcolor{comment}{//\ =\ 3}}
+\DoxyCodeLine{00102\ \ \ isoCOUNT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ =\ 4}}
+\DoxyCodeLine{00103\ \}}
+\DoxyCodeLine{00104\ ili9341\_screen\_orientation\_t;}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00107\ \{}
+\DoxyCodeLine{00108\ \ \ itsNONE\ =\ -\/1,}
+\DoxyCodeLine{00109\ \ \ itsNotSupported,\ \textcolor{comment}{//\ =\ 0}}
+\DoxyCodeLine{00110\ \ \ itsSupported,\ \ \ \ \textcolor{comment}{//\ =\ 1}}
+\DoxyCodeLine{00111\ \ \ itsCOUNT\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ =\ 2}}
+\DoxyCodeLine{00112\ \}}
+\DoxyCodeLine{00113\ ili9341\_touch\_support\_t;}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00116\ \{}
+\DoxyCodeLine{00117\ \ \ itpNONE\ =\ -\/1,}
+\DoxyCodeLine{00118\ \ \ itpNotPressed,\ \textcolor{comment}{//\ =\ 0}}
+\DoxyCodeLine{00119\ \ \ itpPressed,\ \ \ \ \textcolor{comment}{//\ =\ 1}}
+\DoxyCodeLine{00120\ \ \ itpCOUNT\ \ \ \ \ \ \ \textcolor{comment}{//\ =\ 2}}
+\DoxyCodeLine{00121\ \}}
+\DoxyCodeLine{00122\ ili9341\_touch\_pressed\_t;}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00125\ \{}
+\DoxyCodeLine{00126\ \ \ itnNONE\ =\ -\/1,}
+\DoxyCodeLine{00127\ \ \ itnNotNormalized,\ \textcolor{comment}{//\ =\ 0}}
+\DoxyCodeLine{00128\ \ \ itnNormalized,\ \ \ \ \textcolor{comment}{//\ =\ 1}}
+\DoxyCodeLine{00129\ \ \ itnCOUNT\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ =\ 2}}
+\DoxyCodeLine{00130\ \}}
+\DoxyCodeLine{00131\ ili9341\_touch\_normalize\_t;}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00134\ \{}
+\DoxyCodeLine{00135\ \ \ itcNONE\ =\ -\/1,}
+\DoxyCodeLine{00136\ \ \ itcScalar,\ \textcolor{comment}{//\ =\ 0}}
+\DoxyCodeLine{00137\ \ \ itc3Point,\ \textcolor{comment}{//\ =\ 1}}
+\DoxyCodeLine{00138\ \ \ itcCOUNT,}
+\DoxyCodeLine{00139\ \}}
+\DoxyCodeLine{00140\ ili9341\_touch\_calibration\_t;}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00143\ \{}
+\DoxyCodeLine{00144\ \ \ \mbox{\hyperlink{structili9341__two__dimension__t}{ili9341\_two\_dimension\_t}}\ min;}
+\DoxyCodeLine{00145\ \ \ \mbox{\hyperlink{structili9341__two__dimension__t}{ili9341\_two\_dimension\_t}}\ max;}
+\DoxyCodeLine{00146\ \}}
+\DoxyCodeLine{00147\ \mbox{\hyperlink{structili9341__scalar__calibrator__t}{ili9341\_scalar\_calibrator\_t}};}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00150\ \{}
+\DoxyCodeLine{00151\ \ \ \mbox{\hyperlink{structili9341__two__dimension__t}{ili9341\_two\_dimension\_t}}\ scale;}
+\DoxyCodeLine{00152\ \ \ int32\_t\ delta\_x;}
+\DoxyCodeLine{00153\ \ \ int32\_t\ delta\_y;}
+\DoxyCodeLine{00154\ \ \ \textcolor{keywordtype}{float}\ \ \ alpha\_x;}
+\DoxyCodeLine{00155\ \ \ \textcolor{keywordtype}{float}\ \ \ beta\_x;}
+\DoxyCodeLine{00156\ \ \ \textcolor{keywordtype}{float}\ \ \ alpha\_y;}
+\DoxyCodeLine{00157\ \ \ \textcolor{keywordtype}{float}\ \ \ beta\_y;}
+\DoxyCodeLine{00158\ \}}
+\DoxyCodeLine{00159\ \mbox{\hyperlink{structili9341__3point__calibrator__t}{ili9341\_3point\_calibrator\_t}};}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00162\ \{}
+\DoxyCodeLine{00163\ \ \ issNONE\ =\ -\/1,}
+\DoxyCodeLine{00164\ \ \ issDisplayTFT,\ \ \textcolor{comment}{//\ =\ 0}}
+\DoxyCodeLine{00165\ \ \ issTouchScreen,\ \textcolor{comment}{//\ =\ 1}}
+\DoxyCodeLine{00166\ \ \ issCOUNT\ \ \ \ \ \ \ \ \textcolor{comment}{//\ =\ 2}}
+\DoxyCodeLine{00167\ \}}
+\DoxyCodeLine{00168\ ili9341\_spi\_slave\_t;}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \textcolor{keyword}{typedef}\ void\ (*ili9341\_touch\_callback\_t)(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *,\ uint16\_t,\ uint16\_t);}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \textcolor{keyword}{typedef}\ HAL\_StatusTypeDef\ ili9341\_status\_t;}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structili9341}{ili9341}}}
+\DoxyCodeLine{00175\ \{}
+\DoxyCodeLine{00176\ \ \ SPI\_HandleTypeDef\ *spi\_hal;}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ GPIO\_TypeDef\ *reset\_port;}
+\DoxyCodeLine{00179\ \ \ uint16\_t\ \ \ \ \ \ reset\_pin;}
+\DoxyCodeLine{00180\ \ \ GPIO\_TypeDef\ *tft\_select\_port;}
+\DoxyCodeLine{00181\ \ \ uint16\_t\ \ \ \ \ \ tft\_select\_pin;}
+\DoxyCodeLine{00182\ \ \ GPIO\_TypeDef\ *data\_command\_port;}
+\DoxyCodeLine{00183\ \ \ uint16\_t\ \ \ \ \ \ data\_command\_pin;}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ ili9341\_screen\_orientation\_t\ orientation;}
+\DoxyCodeLine{00186\ \ \ \mbox{\hyperlink{structili9341__two__dimension__t}{ili9341\_two\_dimension\_t}}\ \ \ \ \ \ screen\_size;}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ GPIO\_TypeDef\ *touch\_select\_port;}
+\DoxyCodeLine{00189\ \ \ uint16\_t\ \ \ \ \ \ touch\_select\_pin;}
+\DoxyCodeLine{00190\ \ \ GPIO\_TypeDef\ *touch\_irq\_port;}
+\DoxyCodeLine{00191\ \ \ uint16\_t\ \ \ \ \ \ touch\_irq\_pin;}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ ili9341\_touch\_support\_t\ \ \ touch\_support;}
+\DoxyCodeLine{00194\ \ \ ili9341\_touch\_normalize\_t\ touch\_normalize;}
+\DoxyCodeLine{00195\ \ \ \mbox{\hyperlink{structili9341__two__dimension__t}{ili9341\_two\_dimension\_t}}\ \ \ touch\_coordinate;}
+\DoxyCodeLine{00196\ \ \ ili9341\_touch\_calibration\_t\ touch\_calibration;}
+\DoxyCodeLine{00197\ \ \ \mbox{\hyperlink{structili9341__scalar__calibrator__t}{ili9341\_scalar\_calibrator\_t}}\ touch\_scalar;}
+\DoxyCodeLine{00198\ \ \ \mbox{\hyperlink{structili9341__3point__calibrator__t}{ili9341\_3point\_calibrator\_t}}\ touch\_3point;}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ ili9341\_touch\_pressed\_t\ \ touch\_pressed;}
+\DoxyCodeLine{00201\ \ \ ili9341\_touch\_callback\_t\ touch\_pressed\_begin;}
+\DoxyCodeLine{00202\ \ \ ili9341\_touch\_callback\_t\ touch\_pressed\_end;}
+\DoxyCodeLine{00203\ \};}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ exported\ variables\ -\/-\/}}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \textcolor{comment}{/*\ nothing\ */}}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ exported\ functions\ -\/-\/}}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \mbox{\hyperlink{structili9341}{ili9341\_t}}\ *ili9341\_new(}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \ \ \ \ SPI\_HandleTypeDef\ *spi\_hal,}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ GPIO\_TypeDef\ *reset\_port,\ \ \ \ \ \ \ \ uint16\_t\ reset\_pin,}
+\DoxyCodeLine{00216\ \ \ \ \ GPIO\_TypeDef\ *tft\_select\_port,\ \ \ uint16\_t\ tft\_select\_pin,}
+\DoxyCodeLine{00217\ \ \ \ \ GPIO\_TypeDef\ *data\_command\_port,\ uint16\_t\ data\_command\_pin,}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \ \ ili9341\_screen\_orientation\_t\ orientation,}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \ \ GPIO\_TypeDef\ *touch\_select\_port,\ uint16\_t\ touch\_select\_pin,}
+\DoxyCodeLine{00222\ \ \ \ \ GPIO\_TypeDef\ *touch\_irq\_port,\ \ \ \ uint16\_t\ touch\_irq\_pin,}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \ \ ili9341\_touch\_support\_t\ \ \ touch\_support,}
+\DoxyCodeLine{00225\ \ \ \ \ ili9341\_touch\_normalize\_t\ touch\_normalize);}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \textcolor{keywordtype}{void}\ ili9341\_touch\_interrupt(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd);}
+\DoxyCodeLine{00228\ ili9341\_touch\_pressed\_t\ ili9341\_touch\_pressed(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd);}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \textcolor{keywordtype}{void}\ ili9341\_set\_touch\_pressed\_begin(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,}
+\DoxyCodeLine{00231\ \ \ \ \ ili9341\_touch\_callback\_t\ callback);}
+\DoxyCodeLine{00232\ \textcolor{keywordtype}{void}\ ili9341\_set\_touch\_pressed\_end(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,}
+\DoxyCodeLine{00233\ \ \ \ \ ili9341\_touch\_callback\_t\ callback);}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ ili9341\_touch\_pressed\_t\ ili9341\_touch\_coordinate(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,}
+\DoxyCodeLine{00236\ \ \ \ \ uint16\_t\ *x\_pos,\ uint16\_t\ *y\_pos);}
+\DoxyCodeLine{00237\ \textcolor{keywordtype}{void}\ ili9341\_calibrate\_scalar(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,}
+\DoxyCodeLine{00238\ \ \ \ \ uint16\_t\ min\_x,\ uint16\_t\ min\_y,\ uint16\_t\ max\_x,\ uint16\_t\ max\_y);}
+\DoxyCodeLine{00239\ \textcolor{keywordtype}{void}\ ili9341\_calibrate\_3point(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,}
+\DoxyCodeLine{00240\ \ \ \ \ uint16\_t\ scale\_width,\ uint16\_t\ scale\_height,}
+\DoxyCodeLine{00241\ \ \ \ \ int32\_t\ screen\_a\_x,\ int32\_t\ screen\_a\_y,}
+\DoxyCodeLine{00242\ \ \ \ \ int32\_t\ screen\_b\_x,\ int32\_t\ screen\_b\_y,}
+\DoxyCodeLine{00243\ \ \ \ \ int32\_t\ screen\_c\_x,\ int32\_t\ screen\_c\_y,}
+\DoxyCodeLine{00244\ \ \ \ \ int32\_t\ touch\_a\_x,\ \ int32\_t\ touch\_a\_y,}
+\DoxyCodeLine{00245\ \ \ \ \ int32\_t\ touch\_b\_x,\ \ int32\_t\ touch\_b\_y,}
+\DoxyCodeLine{00246\ \ \ \ \ int32\_t\ touch\_c\_x,\ \ int32\_t\ touch\_c\_y);}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \textcolor{keywordtype}{void}\ ili9341\_spi\_tft\_select(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd);}
+\DoxyCodeLine{00249\ \textcolor{keywordtype}{void}\ ili9341\_spi\_tft\_release(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd);}
+\DoxyCodeLine{00250\ \textcolor{keywordtype}{void}\ ili9341\_spi\_touch\_select(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd);}
+\DoxyCodeLine{00251\ \textcolor{keywordtype}{void}\ ili9341\_spi\_touch\_release(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd);}
+\DoxyCodeLine{00252\ \textcolor{keywordtype}{void}\ ili9341\_spi\_slave\_select(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,}
+\DoxyCodeLine{00253\ \ \ \ \ ili9341\_spi\_slave\_t\ spi\_slave);}
+\DoxyCodeLine{00254\ \textcolor{keywordtype}{void}\ ili9341\_spi\_slave\_release(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,}
+\DoxyCodeLine{00255\ \ \ \ \ ili9341\_spi\_slave\_t\ spi\_slave);}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \textcolor{keywordtype}{void}\ ili9341\_spi\_write\_command(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,}
+\DoxyCodeLine{00258\ \ \ \ \ ili9341\_spi\_slave\_t\ spi\_slave,\ uint8\_t\ command);}
+\DoxyCodeLine{00259\ \textcolor{keywordtype}{void}\ ili9341\_spi\_write\_data(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,}
+\DoxyCodeLine{00260\ \ \ \ \ ili9341\_spi\_slave\_t\ spi\_slave,\ uint16\_t\ data\_sz,\ uint8\_t\ data[]);}
+\DoxyCodeLine{00261\ \textcolor{keywordtype}{void}\ ili9341\_spi\_write\_data\_read(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,}
+\DoxyCodeLine{00262\ \ \ \ \ ili9341\_spi\_slave\_t\ spi\_slave,}
+\DoxyCodeLine{00263\ \ \ \ \ uint16\_t\ data\_sz,\ uint8\_t\ tx\_data[],\ uint8\_t\ rx\_data[]);}
+\DoxyCodeLine{00264\ \textcolor{keywordtype}{void}\ ili9341\_spi\_write\_command\_data(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,}
+\DoxyCodeLine{00265\ \ \ \ \ ili9341\_spi\_slave\_t\ spi\_slave,\ uint8\_t\ command,\ uint16\_t\ data\_sz,\ uint8\_t\ data[]);}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00268\ \}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_\_ILI9341\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

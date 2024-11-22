@@ -1,0 +1,45 @@
+\doxysection{Character.\+h}
+\hypertarget{_character_8h_source}{}\label{_character_8h_source}\index{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Inc/Character.h@{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Inc/Character.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ character.h}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \ Created\ on:\ Oct\ 21,\ 2024}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ \ \ \ \ \ Author:\ joerg}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ INC\_CHARACTER\_H\_}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ INC\_CHARACTER\_H\_}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}ili9341\_gfx.h"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ GHOST\_COLOR\ ILI9341\_RED}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ PACMAN\_COLOR\ ILI9341\_YELLOW}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ NONE,\ PACMAN,\ GHOST}
+\DoxyCodeLine{00019\ \}character\_type\_t;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00022\ \ \ \ \ character\_type\_t\ type;}
+\DoxyCodeLine{00023\ \ \ \ \ ili9341\_color\_t\ color;}
+\DoxyCodeLine{00024\ \}\mbox{\hyperlink{structcharacter__t}{character\_t}};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00027\ \ \ \ \ int16\_t\ x;}
+\DoxyCodeLine{00028\ \ \ \ \ int16\_t\ y;}
+\DoxyCodeLine{00029\ \}\mbox{\hyperlink{structposition__t}{position\_t}};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{structcharacter__t}{character\_t}}\ character;}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{structposition__t}{position\_t}}\ start\_pos;}
+\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{structposition__t}{position\_t}}\ current\_pos;}
+\DoxyCodeLine{00036\ \ \ \ \ \mbox{\hyperlink{structposition__t}{position\_t}}\ previous\_pos;}
+\DoxyCodeLine{00037\ \}\mbox{\hyperlink{structplayer__t}{player\_t}};}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ INC\_CHARACTER\_H\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

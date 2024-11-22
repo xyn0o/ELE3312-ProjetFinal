@@ -1,0 +1,140 @@
+\doxysection{ili9341\+\_\+gfx.\+h}
+\hypertarget{ili9341__gfx_8h_source}{}\label{ili9341__gfx_8h_source}\index{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Inc/ili9341\_gfx.h@{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Inc/ili9341\_gfx.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ ili9341\_gfx.h}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \ Created\ on:\ Jan\ 17,\ 2020}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ \ \ \ \ \ Author:\ andrew}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ \_\_ILI9341\_GFX\_H}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ \_\_ILI9341\_GFX\_H}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00012\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ includes\ -\/-\/}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}ili9341.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}ili9341\_font.h"{}}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ defines\ -\/-\/}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{/*\ nothing\ */}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ macros\ -\/-\/}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ \_\_ILI9341\_COLOR565(r,g,b)\ \(\backslash\)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\ \ \ \ (\ (((r)\ \&\ 0xF8)\ <<\ 8)\ |\ \ \(\backslash\)}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\ \ \ \ \ \ (((g)\ \&\ 0xFC)\ <<\ 3)\ |\ \ \(\backslash\)}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\ \ \ \ \ \ (((b)\ \&\ 0xF8)\ >>\ 3)\ )}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ \_\_ILI9341\_COLOR565\_RGB(rgb)\ \(\backslash\)}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\ \ \ \ \_\_ILI9341\_COLOR565((rgb).red,\ (rgb).green,\ (rgb).blue)}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ \_\_ILI9341\_RGB(r,g,b)\ \(\backslash\)}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\ \ \ \ (ili9341\_color\_rgb\_t)\{\ .red\ =\ (r),\ .green\ =\ (g),\ .blue\ =\ (b)\ \}}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ exported\ types\ -\/-\/}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{typedef}\ uint16\_t\ ili9341\_color\_t;}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00043\ \{}
+\DoxyCodeLine{00044\ \ \ int16\_t\ red;}
+\DoxyCodeLine{00045\ \ \ int16\_t\ green;}
+\DoxyCodeLine{00046\ \ \ int16\_t\ blue;}
+\DoxyCodeLine{00047\ \}}
+\DoxyCodeLine{00048\ \mbox{\hyperlink{structili9341__color__rgb__t}{ili9341\_color\_rgb\_t}};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{//\ TODO:}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00052\ \{}
+\DoxyCodeLine{00053\ \ \ iwwNONE\ =\ -\/1,}
+\DoxyCodeLine{00054\ \ \ iwwTruncate,\ \textcolor{comment}{//\ =\ 0}}
+\DoxyCodeLine{00055\ \ \ iwwCharWrap,\ \textcolor{comment}{//\ =\ 1}}
+\DoxyCodeLine{00056\ \ \ iwwWordWrap,\ \textcolor{comment}{//\ =\ 2}}
+\DoxyCodeLine{00057\ \ \ iwwCOUNT\ \ \ \ \ \textcolor{comment}{//\ =\ 3}}
+\DoxyCodeLine{00058\ \}}
+\DoxyCodeLine{00059\ ili9341\_word\_wrap\_t;}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00062\ \{}
+\DoxyCodeLine{00063\ \ \ \mbox{\hyperlink{structili9341__font__t}{ili9341\_font\_t}}\ \textcolor{keyword}{const}\ *font;}
+\DoxyCodeLine{00064\ \ \ ili9341\_color\_t\ fg\_color;}
+\DoxyCodeLine{00065\ \ \ ili9341\_color\_t\ bg\_color;}
+\DoxyCodeLine{00066\ \ \ uint16\_t\ origin\_x;}
+\DoxyCodeLine{00067\ \ \ uint16\_t\ origin\_y;}
+\DoxyCodeLine{00068\ \}}
+\DoxyCodeLine{00069\ \mbox{\hyperlink{structili9341__text__attr__t}{ili9341\_text\_attr\_t}};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ exported\ variables\ -\/-\/}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_BLACK;}
+\DoxyCodeLine{00074\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_NAVY;}
+\DoxyCodeLine{00075\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_DARKGREEN;}
+\DoxyCodeLine{00076\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_DARKCYAN;}
+\DoxyCodeLine{00077\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_MAROON;}
+\DoxyCodeLine{00078\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_PURPLE;}
+\DoxyCodeLine{00079\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_OLIVE;}
+\DoxyCodeLine{00080\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_LIGHTGREY;}
+\DoxyCodeLine{00081\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_DARKGREY;}
+\DoxyCodeLine{00082\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_BLUE;}
+\DoxyCodeLine{00083\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_GREEN;}
+\DoxyCodeLine{00084\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_CYAN;}
+\DoxyCodeLine{00085\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_RED;}
+\DoxyCodeLine{00086\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_MAGENTA;}
+\DoxyCodeLine{00087\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_YELLOW;}
+\DoxyCodeLine{00088\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_WHITE;}
+\DoxyCodeLine{00089\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_ORANGE;}
+\DoxyCodeLine{00090\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_GREENYELLOW;}
+\DoxyCodeLine{00091\ \textcolor{keyword}{extern}\ ili9341\_color\_t\ \textcolor{keyword}{const}\ ILI9341\_PINK;}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ exported\ functions\ -\/-\/}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \mbox{\hyperlink{structili9341__color__rgb__t}{ili9341\_color\_rgb\_t}}\ ili9341\_rgb\_wheel(uint8\_t\ *pos);}
+\DoxyCodeLine{00096\ ili9341\_color\_t\ ili9341\_color\_wheel(uint8\_t\ *pos);}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{keywordtype}{void}\ ili9341\_spi\_tft\_set\_address\_rect(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,}
+\DoxyCodeLine{00099\ \ \ \ \ uint16\_t\ x0,\ uint16\_t\ y0,\ uint16\_t\ x1,\ uint16\_t\ y1);}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{keywordtype}{void}\ ili9341\_transmit\_wait(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd);}
+\DoxyCodeLine{00102\ \textcolor{keywordtype}{void}\ ili9341\_transmit\_color(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ uint16\_t\ size,}
+\DoxyCodeLine{00103\ \ \ \ \ uint16\_t\ color[]\textcolor{comment}{/*\ already\ byte-\/swapped\ (LE)\ */},\ ili9341\_bool\_t\ wait);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{keywordtype}{void}\ ili9341\_draw\_pixel(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ ili9341\_color\_t\ color,}
+\DoxyCodeLine{00106\ \ \ \ \ int16\_t\ x,\ int16\_t\ y);}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{keywordtype}{void}\ ili9341\_draw\_line(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ ili9341\_color\_t\ color,}
+\DoxyCodeLine{00109\ \ \ \ \ int16\_t\ x0,\ int16\_t\ y0,\ int16\_t\ x1,\ int16\_t\ y1);}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{keywordtype}{void}\ ili9341\_draw\_rect(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ ili9341\_color\_t\ color,}
+\DoxyCodeLine{00112\ \ \ \ \ int16\_t\ x,\ int16\_t\ y,\ uint16\_t\ w,\ uint16\_t\ h);}
+\DoxyCodeLine{00113\ \textcolor{keywordtype}{void}\ ili9341\_fill\_rect(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ ili9341\_color\_t\ color,}
+\DoxyCodeLine{00114\ \ \ \ \ int16\_t\ x,\ int16\_t\ y,\ uint16\_t\ w,\ uint16\_t\ h);}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{keywordtype}{void}\ ili9341\_draw\_circle(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ ili9341\_color\_t\ color,}
+\DoxyCodeLine{00117\ \ \ \ \ int16\_t\ x,\ int16\_t\ y,\ int16\_t\ r);}
+\DoxyCodeLine{00118\ \textcolor{keywordtype}{void}\ ili9341\_fill\_circle(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ ili9341\_color\_t\ color,}
+\DoxyCodeLine{00119\ \ \ \ \ int16\_t\ x,\ int16\_t\ y,\ int16\_t\ r);}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{keywordtype}{void}\ ili9341\_fill\_screen(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ ili9341\_color\_t\ color);}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{keywordtype}{void}\ ili9341\_draw\_bitmap\_1b(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,}
+\DoxyCodeLine{00124\ \ \ \ \ ili9341\_color\_t\ fg\_color,\ ili9341\_color\_t\ bg\_color,}
+\DoxyCodeLine{00125\ \ \ \ \ int16\_t\ x,\ int16\_t\ y,\ uint16\_t\ w,\ uint16\_t\ h,\ uint8\_t\ *bmp);}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \textcolor{keywordtype}{void}\ ili9341\_draw\_char(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ \mbox{\hyperlink{structili9341__text__attr__t}{ili9341\_text\_attr\_t}}\ attr,\ \textcolor{keywordtype}{char}\ ch);}
+\DoxyCodeLine{00128\ \textcolor{keywordtype}{void}\ ili9341\_draw\_string(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ \mbox{\hyperlink{structili9341__text__attr__t}{ili9341\_text\_attr\_t}}\ attr,\ \textcolor{keywordtype}{char}\ str[]);}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00131\ \}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_\_ILI9341\_GFX\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

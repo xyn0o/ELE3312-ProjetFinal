@@ -1,0 +1,46 @@
+\doxysection{Battle.\+h}
+\hypertarget{_battle_8h_source}{}\label{_battle_8h_source}\index{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Inc/Battle.h@{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Inc/Battle.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Combat.h}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \ Created\ on:\ Oct\ 17,\ 2024}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ \ \ \ \ \ Author:\ joerg}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ INC\_BATTLE\_H\_}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ INC\_BATTLE\_H\_}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}Character.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}Graphics.h"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}Game.h"{}}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}stdio.h"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}stdlib.h"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}math.h"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}ili9341.h"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}ili9341\_gfx.h"{}}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ INDICATOR\_WIDTH\ 10}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ INDICATOR\_HEIGHT\ 10}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ POWER\_BAR\_WIDTH\ 10}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ MAX\_POWER\ 240}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ PLAYER\_LEFT\_X\ 30}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ PLAYER\_RIGHT\_X\ 160}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ PLAYER\_Y\ 160}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keywordtype}{void}\ drawBattleScreen(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ \mbox{\hyperlink{structplayer__t}{player\_t}}\ *local\_player);}
+\DoxyCodeLine{00032\ \textcolor{keywordtype}{void}\ drawRandomTarget(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ ili9341\_color\_t\ *target\_color,\ \ uint16\_t\ *target\_pos\_y);}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keywordtype}{void}\ incrementPowerBar(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ ili9341\_color\_t\ *bar\_color,\ uint16\_t\ *power,\ uint8\_t\ target\_matched);}
+\DoxyCodeLine{00035\ \textcolor{keywordtype}{void}\ updateEnemyPowerBar(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ ili9341\_color\_t\ *bar\_color,\ uint16\_t\ *enemy\_power);}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ uint8\_t\ checkWinner(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ \mbox{\hyperlink{structplayer__t}{player\_t}}\ *local\_player,\ uint16\_t\ *local\_power,\ uint16\_t\ *enemy\_power);}
+\DoxyCodeLine{00038\ \textcolor{keywordtype}{void}\ battle(\mbox{\hyperlink{structili9341}{ili9341\_t}}\ *lcd,\ \mbox{\hyperlink{structplayer__t}{player\_t}}\ *players);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ INC\_BATTLE\_H\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

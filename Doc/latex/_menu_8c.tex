@@ -1,0 +1,38 @@
+\doxysection{C\+:/\+Users/joerg/\+Documents/\+Embedded\+\_\+cours/final/gabari/\+ELE3312\+\_\+\+Project/\+Core/\+Src/\+Menu.c File Reference}
+\hypertarget{_menu_8c}{}\label{_menu_8c}\index{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Src/Menu.c@{C:/Users/joerg/Documents/Embedded\_cours/final/gabari/ELE3312\_Project/Core/Src/Menu.c}}
+
+
+This file implements the game manu. The menu is used to choose a character (Pac-\/\+Man or Ghost)  
+
+
+{\ttfamily \#include "{}Menu.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{_menu_8c_a0e6f756787739becb052c4a3cb6c7dc9}{choose\+Player}} (\mbox{\hyperlink{structili9341}{ili9341\+\_\+t}} \texorpdfstring{$\ast$}{*}lcd, \mbox{\hyperlink{structplayer__t}{player\+\_\+t}} \texorpdfstring{$\ast$}{*}players)
+\begin{DoxyCompactList}\small\item\em The function draws the two possible players (Pac-\/\+Man or Ghost) on the screen. Additionally, it renders two hollow squares under each character and a filled square in the middle that serves as a cursor. The function is supposed to read the accelerometer value and use its values to move the cursor block until it coincides with one of the hollow squares. At this point, the player is chosen and the function returns. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This file implements the game manu. The menu is used to choose a character (Pac-\/\+Man or Ghost) 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{_menu_8c_a0e6f756787739becb052c4a3cb6c7dc9}\index{Menu.c@{Menu.c}!choosePlayer@{choosePlayer}}
+\index{choosePlayer@{choosePlayer}!Menu.c@{Menu.c}}
+\doxysubsubsection{\texorpdfstring{choosePlayer()}{choosePlayer()}}
+{\footnotesize\ttfamily \label{_menu_8c_a0e6f756787739becb052c4a3cb6c7dc9} 
+void choose\+Player (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structili9341}{ili9341\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{lcd}{, }\item[{\mbox{\hyperlink{structplayer__t}{player\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{players}{}\end{DoxyParamCaption})}
+
+
+
+The function draws the two possible players (Pac-\/\+Man or Ghost) on the screen. Additionally, it renders two hollow squares under each character and a filled square in the middle that serves as a cursor. The function is supposed to read the accelerometer value and use its values to move the cursor block until it coincides with one of the hollow squares. At this point, the player is chosen and the function returns. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lcd} & \mbox{[}in\mbox{]} pointer to the \doxylink{structili9341}{ili9341} handle structure used to access the tft screen \\
+\hline
+{\em players} & \mbox{[}out\mbox{]} array of \doxylink{structplayer__t}{player\+\_\+t} structures which contains the identities of the players when the function returns \\
+\hline
+\end{DoxyParams}

@@ -1,0 +1,146 @@
+\doxysection{ELE3312}
+\hypertarget{group___e_l_e3312}{}\label{group___e_l_e3312}\index{ELE3312@{ELE3312}}
+\doxysubsubsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file \mbox{\hyperlink{_battle_8c}{Battle.\+c}}
+\begin{DoxyCompactList}\small\item\em Implements the battle between two players (Pac-\/\+Man and Ghost). ~\newline
+ \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{group___e_l_e3312_gaa0f7b8334754b97c170e85efe0c5769f}{draw\+Battle\+Screen}} (\mbox{\hyperlink{structili9341}{ili9341\+\_\+t}} \texorpdfstring{$\ast$}{*}lcd, \mbox{\hyperlink{structplayer__t}{player\+\_\+t}} \texorpdfstring{$\ast$}{*}local\+\_\+player)
+\begin{DoxyCompactList}\small\item\em This function draws the two enemies (Ghost and Pac-\/\+Man) on the screen. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___e_l_e3312_ga39780d88ea80a30357c03001d9598d50}{draw\+Random\+Target}} (\mbox{\hyperlink{structili9341}{ili9341\+\_\+t}} \texorpdfstring{$\ast$}{*}lcd, ili9341\+\_\+color\+\_\+t \texorpdfstring{$\ast$}{*}target\+\_\+color, uint16\+\_\+t \texorpdfstring{$\ast$}{*}target\+\_\+pos\+\_\+y)
+\begin{DoxyCompactList}\small\item\em This function generates new target note after a certain time and draws the target on the screen. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___e_l_e3312_ga4c9353801c54dc61153faf86c7f16916}{increment\+Power\+Bar}} (\mbox{\hyperlink{structili9341}{ili9341\+\_\+t}} \texorpdfstring{$\ast$}{*}lcd, ili9341\+\_\+color\+\_\+t \texorpdfstring{$\ast$}{*}bar\+\_\+color, uint16\+\_\+t \texorpdfstring{$\ast$}{*}power, uint8\+\_\+t target\+\_\+matched)
+\begin{DoxyCompactList}\small\item\em This function increments the value of the power-\/bar a bar-\/graph-\/like indicator. The first player capable of filling up its power-\/bar serves a fatal attack to the opponent and wins the battle. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___e_l_e3312_ga008ee511c81af91874ccbde4609e235b}{update\+Enemy\+Power\+Bar}} (\mbox{\hyperlink{structili9341}{ili9341\+\_\+t}} \texorpdfstring{$\ast$}{*}lcd, ili9341\+\_\+color\+\_\+t \texorpdfstring{$\ast$}{*}bar\+\_\+color, uint16\+\_\+t \texorpdfstring{$\ast$}{*}enemy\+\_\+power)
+\begin{DoxyCompactList}\small\item\em This function draws the power-\/bar of the opponent. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{group___e_l_e3312_gab86b1aabde1489c7fb12ed8d7bf42be6}{check\+Winner}} (\mbox{\hyperlink{structili9341}{ili9341\+\_\+t}} \texorpdfstring{$\ast$}{*}lcd, \mbox{\hyperlink{structplayer__t}{player\+\_\+t}} \texorpdfstring{$\ast$}{*}local\+\_\+player, uint16\+\_\+t \texorpdfstring{$\ast$}{*}local\+\_\+power, uint16\+\_\+t \texorpdfstring{$\ast$}{*}enemy\+\_\+power)
+\begin{DoxyCompactList}\small\item\em Function that checks whether one of the two players have reached the maximum power and hence won the battle. In case of a victory, the function visually indicates the losing player and announces which player won. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___e_l_e3312_gac2b60d5d53cc6a387887ca870f7f0c50}{battle}} (\mbox{\hyperlink{structili9341}{ili9341\+\_\+t}} \texorpdfstring{$\ast$}{*}lcd, \mbox{\hyperlink{structplayer__t}{player\+\_\+t}} \texorpdfstring{$\ast$}{*}players)
+\begin{DoxyCompactList}\small\item\em This function implements the game logic of the battle stage of the game. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{group___e_l_e3312_gac2b60d5d53cc6a387887ca870f7f0c50}\index{ELE3312@{ELE3312}!battle@{battle}}
+\index{battle@{battle}!ELE3312@{ELE3312}}
+\doxysubsubsection{\texorpdfstring{battle()}{battle()}}
+{\footnotesize\ttfamily \label{group___e_l_e3312_gac2b60d5d53cc6a387887ca870f7f0c50} 
+void battle (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structili9341}{ili9341\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{lcd}{, }\item[{\mbox{\hyperlink{structplayer__t}{player\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{players}{}\end{DoxyParamCaption})}
+
+
+
+This function implements the game logic of the battle stage of the game. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lcd} & \mbox{[}in\mbox{]} pointer to the \doxylink{structili9341}{ili9341} handle structure used to access the tft screen \\
+\hline
+{\em players} & \mbox{[}in\mbox{]} pointer to an array of \doxylink{structplayer__t}{player\+\_\+t} structs containing information about the players \\
+\hline
+\end{DoxyParams}
+\Hypertarget{group___e_l_e3312_gab86b1aabde1489c7fb12ed8d7bf42be6}\index{ELE3312@{ELE3312}!checkWinner@{checkWinner}}
+\index{checkWinner@{checkWinner}!ELE3312@{ELE3312}}
+\doxysubsubsection{\texorpdfstring{checkWinner()}{checkWinner()}}
+{\footnotesize\ttfamily \label{group___e_l_e3312_gab86b1aabde1489c7fb12ed8d7bf42be6} 
+uint8\+\_\+t check\+Winner (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structili9341}{ili9341\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{lcd}{, }\item[{\mbox{\hyperlink{structplayer__t}{player\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{local\+\_\+player}{, }\item[{uint16\+\_\+t \texorpdfstring{$\ast$}{*}}]{local\+\_\+power}{, }\item[{uint16\+\_\+t \texorpdfstring{$\ast$}{*}}]{enemy\+\_\+power}{}\end{DoxyParamCaption})}
+
+
+
+Function that checks whether one of the two players have reached the maximum power and hence won the battle. In case of a victory, the function visually indicates the losing player and announces which player won. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lcd} & \mbox{[}in\mbox{]} pointer to the \doxylink{structili9341}{ili9341} handle structure used to access the tft screen \\
+\hline
+{\em local\+\_\+player} & \mbox{[}in\mbox{]} pointer to the \doxylink{structplayer__t}{player\+\_\+t} structure that holds the local players information \\
+\hline
+{\em local\+\_\+power} & \mbox{[}in\mbox{]} pointer to an unsigned integer containing the local players\textquotesingle{} current power level \\
+\hline
+{\em enemy\+\_\+power} & \mbox{[}in\mbox{]} pointer to an unsigned integer holding the opponents power \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+unsigned integer value that indicates 0 -\/ no winner, 1 -\/ local player wins, 2 -\/ opponent wins 
+\end{DoxyReturn}
+\Hypertarget{group___e_l_e3312_gaa0f7b8334754b97c170e85efe0c5769f}\index{ELE3312@{ELE3312}!drawBattleScreen@{drawBattleScreen}}
+\index{drawBattleScreen@{drawBattleScreen}!ELE3312@{ELE3312}}
+\doxysubsubsection{\texorpdfstring{drawBattleScreen()}{drawBattleScreen()}}
+{\footnotesize\ttfamily \label{group___e_l_e3312_gaa0f7b8334754b97c170e85efe0c5769f} 
+void draw\+Battle\+Screen (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structili9341}{ili9341\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{lcd}{, }\item[{\mbox{\hyperlink{structplayer__t}{player\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{local\+\_\+player}{}\end{DoxyParamCaption})}
+
+
+
+This function draws the two enemies (Ghost and Pac-\/\+Man) on the screen. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lcd} & \mbox{[}in\mbox{]} a pointer to the \doxylink{structili9341}{ili9341} configuration structure \\
+\hline
+{\em local\+\_\+player} & \mbox{[}in\mbox{]} a pointer to the player structure that encapsulates information about the local player (mainly its type) \\
+\hline
+\end{DoxyParams}
+\Hypertarget{group___e_l_e3312_ga39780d88ea80a30357c03001d9598d50}\index{ELE3312@{ELE3312}!drawRandomTarget@{drawRandomTarget}}
+\index{drawRandomTarget@{drawRandomTarget}!ELE3312@{ELE3312}}
+\doxysubsubsection{\texorpdfstring{drawRandomTarget()}{drawRandomTarget()}}
+{\footnotesize\ttfamily \label{group___e_l_e3312_ga39780d88ea80a30357c03001d9598d50} 
+void draw\+Random\+Target (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structili9341}{ili9341\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{lcd}{, }\item[{ili9341\+\_\+color\+\_\+t \texorpdfstring{$\ast$}{*}}]{target\+\_\+color}{, }\item[{uint16\+\_\+t \texorpdfstring{$\ast$}{*}}]{target\+\_\+pos\+\_\+y}{}\end{DoxyParamCaption})}
+
+
+
+This function generates new target note after a certain time and draws the target on the screen. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lcd} & \mbox{[}in\mbox{]} pointer to the \doxylink{structili9341}{ili9341} handle structure used to access the tft screen \\
+\hline
+{\em target\+\_\+color} & \mbox{[}in\mbox{]} pointer to an ili9341\+\_\+color\+\_\+t color that specifies the color of the target token. The color is supposed to change when the player token is in contact with the target \\
+\hline
+{\em target\+\_\+pos\+\_\+y} & \mbox{[}out\mbox{]} unsigned integer pointer that indicates the height of the target. This value can be used to choose the music note and to verify that the player token coincides with the target. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{group___e_l_e3312_ga4c9353801c54dc61153faf86c7f16916}\index{ELE3312@{ELE3312}!incrementPowerBar@{incrementPowerBar}}
+\index{incrementPowerBar@{incrementPowerBar}!ELE3312@{ELE3312}}
+\doxysubsubsection{\texorpdfstring{incrementPowerBar()}{incrementPowerBar()}}
+{\footnotesize\ttfamily \label{group___e_l_e3312_ga4c9353801c54dc61153faf86c7f16916} 
+void increment\+Power\+Bar (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structili9341}{ili9341\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{lcd}{, }\item[{ili9341\+\_\+color\+\_\+t \texorpdfstring{$\ast$}{*}}]{bar\+\_\+color}{, }\item[{uint16\+\_\+t \texorpdfstring{$\ast$}{*}}]{power}{, }\item[{uint8\+\_\+t}]{target\+\_\+matched}{}\end{DoxyParamCaption})}
+
+
+
+This function increments the value of the power-\/bar a bar-\/graph-\/like indicator. The first player capable of filling up its power-\/bar serves a fatal attack to the opponent and wins the battle. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lcd} & \mbox{[}in\mbox{]} pointer to the \doxylink{structili9341}{ili9341} handle structure used to access the tft screen \\
+\hline
+{\em bar\+\_\+color} & \mbox{[}in\mbox{]} pointer to an ili9341\+\_\+color\+\_\+t color of the bar. The bar should have a color that is in accordance with the players\textquotesingle{} game character. \\
+\hline
+{\em power} & \mbox{[}out\mbox{]} pointer to an unsigned integer that holds the power value of the player. Whenever the target token and the players\textquotesingle{} token coincide, the power-\/value is increased. \\
+\hline
+{\em target\+\_\+matched} & \mbox{[}in\mbox{]} pointer to an unsigned integer that indicates that both the players\textquotesingle{} and the target token are in contact. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{group___e_l_e3312_ga008ee511c81af91874ccbde4609e235b}\index{ELE3312@{ELE3312}!updateEnemyPowerBar@{updateEnemyPowerBar}}
+\index{updateEnemyPowerBar@{updateEnemyPowerBar}!ELE3312@{ELE3312}}
+\doxysubsubsection{\texorpdfstring{updateEnemyPowerBar()}{updateEnemyPowerBar()}}
+{\footnotesize\ttfamily \label{group___e_l_e3312_ga008ee511c81af91874ccbde4609e235b} 
+void update\+Enemy\+Power\+Bar (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structili9341}{ili9341\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{lcd}{, }\item[{ili9341\+\_\+color\+\_\+t \texorpdfstring{$\ast$}{*}}]{bar\+\_\+color}{, }\item[{uint16\+\_\+t \texorpdfstring{$\ast$}{*}}]{enemy\+\_\+power}{}\end{DoxyParamCaption})}
+
+
+
+This function draws the power-\/bar of the opponent. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lcd} & \mbox{[}in\mbox{]} pointer to the \doxylink{structili9341}{ili9341} handle structure used to access the tft screen \\
+\hline
+{\em bar\+\_\+color} & \mbox{[}in\mbox{]} pointer to the ili9341\+\_\+color\+\_\+t color of the opponents\textquotesingle{} power-\/bar \\
+\hline
+{\em enemy\+\_\+power} & \mbox{[}in\mbox{]} pointer to an unsigned integer that represents the current enemy power. \\
+\hline
+\end{DoxyParams}
