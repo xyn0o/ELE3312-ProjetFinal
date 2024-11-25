@@ -52,4 +52,8 @@ void checkBoundary(int16_t x, int16_t y, player_t *players, uint16_t *maze, boun
 uint8_t updatePosition(ili9341_t *lcd, position_t new_pos, player_t *players);
 void drawRemotePlayer(ili9341_t *lcd, player_t *player);
 
+extern volatile float accel_x;
+extern volatile float accel_y;
+extern volatile float accel_z;
+
 #endif /* INC_GAME_H_ */

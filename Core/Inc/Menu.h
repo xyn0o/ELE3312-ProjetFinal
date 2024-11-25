@@ -14,7 +14,10 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
+extern volatile float accel_x;
+
 
 void choosePlayer(ili9341_t *lcd, player_t *players);
+
 
 #endif /* INC_MENU_H_ */

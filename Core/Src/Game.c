@@ -266,3 +266,5 @@ void drawRemotePlayer(ili9341_t *lcd, player_t* player) {
 	
 	drawBitmap(lcd, sprite->data, player->current_pos, sprite->width, sprite->height );
 }
+
+
