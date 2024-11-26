@@ -6,7 +6,7 @@
 #include "Menu.h"
 extern volatile float accel_x;
 extern volatile int flag20;
-
+void Send_Message(const uint8_t *message, uint16_t size,uint16_t content_type);
 /**
 * @brief The function draws the two possible players (Pac-Man or Ghost) on the screen. 
 *        Additionally, it renders two hollow squares under each character and a filled 
@@ -43,7 +43,7 @@ void choosePlayer(ili9341_t *lcd, player_t* players){
 	
 
 	float filtered_accel_x = 0.0f;
-  const float alpha = 0.5f; // Smoothing factor for low-pass filter
+  const float alpha = 0.5f; 
 
 	while(chosen_character.type == NONE) {
 		//HAL_Delay(20); // À remplacer avec un timer
@@ -67,10 +67,15 @@ void choosePlayer(ili9341_t *lcd, player_t* players){
 			ili9341_fill_rect(lcd, ILI9341_BLACK, old_cursor_pos.x, old_cursor_pos.y, checkfill_size, checkfill_size);
 			ili9341_fill_rect(lcd, ILI9341_WHITE, cursor_pos.x, cursor_pos.y, checkfill_size, checkfill_size);
 			old_cursor_pos = cursor_pos;
+			uint16_t message;
+			
 			
 			uint8_t pacman_chosen = cursor_pos.x >= pacman_icon_pos.x + checkbox_size + 10;
 			if (pacman_chosen) {
 				chosen_character = pacman;
+				message=0;
+				
+				//Send_Message((uint8_t *)&message, sizeof(message), 1); 		
 				ili9341_fill_rect(lcd, ILI9341_BLACK, pacman_icon_pos.x + 35, 180, checkbox_size, checkbox_size);
 				ili9341_draw_rect(lcd, pacman.color, pacman_icon_pos.x + 35, 180, checkbox_size, checkbox_size);
 				ili9341_fill_rect(lcd, pacman.color, pacman_icon_pos.x + 40, cursor_pos.y, checkfill_size, checkfill_size);
@@ -78,10 +83,14 @@ void choosePlayer(ili9341_t *lcd, player_t* players){
 			uint8_t ghost_chosen = cursor_pos.x <= ghost_icon_pos.x + checkbox_size + 10;
 			if (ghost_chosen) {
 				chosen_character = ghost;
+				message=1;
+				
+				//Send_Message((uint8_t *)&message, sizeof(message), 1); 	
+				chosen_character = ghost;		
 				ili9341_fill_rect(lcd, ILI9341_BLACK, ghost_icon_pos.x + 35, 180, checkbox_size, checkbox_size);
 				ili9341_draw_rect(lcd, ghost.color, ghost_icon_pos.x + 35, 180, checkbox_size, checkbox_size);
 				ili9341_fill_rect(lcd, ghost.color, ghost_icon_pos.x + 40, cursor_pos.y, checkfill_size, checkfill_size);
-			}
+		}
 			flag20=0;
 		}
 	}

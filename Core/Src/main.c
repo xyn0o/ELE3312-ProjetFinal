@@ -46,6 +46,11 @@ typedef enum {
     STATE_NEW_TRANSMISSION,
     STATE_RECEIVE
 } UART_State;
+
+typedef enum {
+    POSITION = 1,
+    GAME_STATE = 2
+} ContentType;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -70,10 +75,10 @@ player_t players[NUM_PLAYERS] = {0};
 
 
 UART_State uart_state = STATE_IDLE;
-uint8_t dma_tx_buffer[UART_BUFFER_SIZE];     // buffer for DMA transmision
-uint8_t uart_buffer[UART_BUFFER_SIZE];       // buffer for RX
-uint8_t received_byte = 0;                   // temporary storage for received byte
-uint16_t buffer_index = 0;                   // current position in RX buffer
+uint8_t dma_tx_buffer[UART_BUFFER_SIZE];      	  // buffer for DMA transmision
+uint8_t uart_buffer[UART_BUFFER_SIZE]; 	// buffer for RX
+uint8_t received_byte = 0;                   			// temporary storage for received byte
+uint16_t buffer_index = 0;                   			// current position in RX buffer
 
 //--ACCELERO--//
 uint8_t data_buffer[6];
@@ -164,23 +169,23 @@ void Configure_MPU6050() {
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     if (GPIO_Pin == GPIO_PIN_11) {
-        if (hi2c1.State == HAL_I2C_STATE_READY) {
-            if (HAL_I2C_Mem_Read_DMA(&hi2c1, MPU6050_ADDR << 1, 0x3B, I2C_MEMADD_SIZE_8BIT, data_buffer, 6) != HAL_OK) {
-                printf("I2C read error!\r\n");
-            }
+				flag+=1;
+			if (flag-30==0){
+				flag=0;
+					if (hi2c1.State == HAL_I2C_STATE_READY) {
+							if (HAL_I2C_Mem_Read_DMA(&hi2c1, MPU6050_ADDR << 1, 0x3B, I2C_MEMADD_SIZE_8BIT, data_buffer, 6) != HAL_OK) {
+									printf("I2C read error!\r\n");
+							}
         }
     }
 }
+}
+
 
 
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {
 		
     if (hi2c->Instance == I2C1) {
-			flag+=1;
-			if (flag-200==0){
-				flag=0;
-			
-				
 			
 				int16_t raw_accel_x = (data_buffer[0] << 8) | data_buffer[1];
 				int16_t raw_accel_y = (data_buffer[2] << 8) | data_buffer[3];
@@ -193,7 +198,12 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {
 			}
 				
     }
-}
+
+
+
+
+
+
 
 
 void Handle_Received_Message(uint8_t *buffer, uint16_t size) {
@@ -205,6 +215,7 @@ void Handle_Received_Message(uint8_t *buffer, uint16_t size) {
     }
     printf("\n");
 }
+
 void UART_Receive_Handler(uint8_t byte) {
     switch (uart_state) {
         case STATE_IDLE:
@@ -243,33 +254,40 @@ void UART_Receive_Handler(uint8_t byte) {
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == UART5) {
-				//printf("RX interrupt triggered. Received: %c\n", received_byte);
+			
+				printf("RX interrupt triggered"); // Received: %c\n", received_byte);
         UART_Receive_Handler(received_byte);
         HAL_UART_Receive_IT(&huart5, &received_byte, 1); // Restart interrupt
     }
 }
+
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == UART5) {
         //printf("DMA TX Complete\n");
     }
 }
-void Send_Message(const uint8_t *message, uint16_t size,uint16_t content_type) {
-    if (size + 4 > UART_BUFFER_SIZE) {
-        printf("Error: Message too large\n");
-        return;
-    }
 
+void Send_Message(const uint8_t *message, uint16_t size, uint16_t content_type) {
+		if (size + 4 > UART_BUFFER_SIZE) {
+    printf("Error: Message too large\n");
+    return;
+		}
+    
     uint8_t full_message[UART_BUFFER_SIZE];
-    full_message[0] = START_BYTE;
-		full_message[1] = content_type;
-    memcpy(&full_message[2], message, size);
-    full_message[2 + size] = '\n';
+    full_message[0] = START_BYTE;       // Start byte
+		full_message[1] = content_type;    // Content type (position)
+		memcpy(&full_message[2], message, size);
+		full_message[2 + size] = '\n';
 		HAL_UART_Transmit_DMA(&huart5, full_message, size + 4);
-
-    /*if (HAL_UART_Transmit_DMA(&huart5, full_message, size + 2) != HAL_OK) {
-        printf("Error: DMA transmission failed.\n");
-    }*/
+		printf("full_message (decimal): ");
+    for (uint16_t i = 0; i < size + 3; i++) { // size + 3 = START_BYTE + CONTENT_TYPE + PAYLOAD + '\n'
+        printf("%d ", full_message[i]);
+    }
+    printf("\n");
+		
 }
+
+
 /* USER CODE END 0 */
 
 /**
@@ -287,7 +305,7 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-	HAL_Delay(100);
+	HAL_Delay(500);
   /* USER CODE BEGIN Init */
 	/* Default players setting */
 	volatile  game_state_t game_state = CHOOSE_PLAYER;
@@ -337,7 +355,12 @@ int main(void)
 	player_t* enemy = &players[ENEMY_PLAYER_ID];
 	
 	int16_t x = 0, y = 0;
+		x = 258;
+		y = 4;
+		int16_t position_data[2] = {x, y};
+	  Send_Message((uint8_t *)position_data, sizeof(position_data), POSITION);
 	
+		
 	/* Infinite loop */
   while (1)
   {
@@ -345,12 +368,16 @@ int main(void)
 	
     /* USER CODE BEGIN 3 */
 		//HAL_Delay(20); // � remplacer avec un timer
+
 		
-		if (flag20==1){
+		
+		
+		if (flag20==10){
 			
 			switch(game_state) {
 			case CHOOSE_PLAYER:
 				choosePlayer(_screen, players);
+				uint16_t message;
 				game_state = INIT_MAZE;
 				flag20=0;
 				break;
@@ -358,6 +385,8 @@ int main(void)
 			case INIT_MAZE:
 				player->current_pos = player->start_pos;
 				enemy->current_pos = enemy->start_pos;
+			
+			
 				drawMaze(_screen, players);			
 				game_state = WANDER_MAZE;
 				flag20=0;
@@ -373,8 +402,8 @@ int main(void)
 				
 				filtered_accel_x = alpha * accel_x_copy + (1 - alpha) * filtered_accel_x;
 				filtered_accel_y = alpha * accel_y_copy + (1 - alpha) * filtered_accel_y;
-				float threshold = 0.01f;    // Low threshold for high sensitivity
-				float sensitivity = 5.0f;  // Adjust sensitivity to control responsiveness
+				float threshold = 0.01f;    
+				float sensitivity = 5.0f;  
 				float max_speed = 3.0f;
 			
 				
@@ -407,9 +436,14 @@ int main(void)
 						delta_y = -max_speed;
 				}
 				y -= delta_y;
-					
-			
-
+				
+				/*int16_t position_data[2] = {x, y};
+				Send_Message((uint8_t *)position_data, sizeof(position_data), POSITION);
+				printf("uart_buffer[0]: %d,", uart_buffer[0]);
+				if (uart_buffer[0]==1){
+					enemy->current_pos.x=(int16_t)(uart_buffer[1] << 8 | uart_buffer[2]);
+					enemy->current_pos.y=(int16_t)(uart_buffer[3] << 8 | uart_buffer[4]);
+					printf("Received Position: x = %d, y = %d\n", x, y);}*/
 				if(updatePosition(_screen, (position_t){x, y}, players)){
 					game_state = BATTLE;
 					flag20=0;
