@@ -67,13 +67,13 @@ void choosePlayer(ili9341_t *lcd, player_t* players){
 			ili9341_fill_rect(lcd, ILI9341_BLACK, old_cursor_pos.x, old_cursor_pos.y, checkfill_size, checkfill_size);
 			ili9341_fill_rect(lcd, ILI9341_WHITE, cursor_pos.x, cursor_pos.y, checkfill_size, checkfill_size);
 			old_cursor_pos = cursor_pos;
-			uint16_t message;
+			
 			
 			
 			uint8_t pacman_chosen = cursor_pos.x >= pacman_icon_pos.x + checkbox_size + 10;
 			if (pacman_chosen) {
 				chosen_character = pacman;
-				message=0;
+				
 				
 				//Send_Message((uint8_t *)&message, sizeof(message), 1); 		
 				ili9341_fill_rect(lcd, ILI9341_BLACK, pacman_icon_pos.x + 35, 180, checkbox_size, checkbox_size);
@@ -83,7 +83,7 @@ void choosePlayer(ili9341_t *lcd, player_t* players){
 			uint8_t ghost_chosen = cursor_pos.x <= ghost_icon_pos.x + checkbox_size + 10;
 			if (ghost_chosen) {
 				chosen_character = ghost;
-				message=1;
+			
 				
 				//Send_Message((uint8_t *)&message, sizeof(message), 1); 	
 				chosen_character = ghost;		

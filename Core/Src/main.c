@@ -47,10 +47,7 @@ typedef enum {
     STATE_RECEIVE
 } UART_State;
 
-typedef enum {
-    POSITION = 1,
-    GAME_STATE = 2
-} ContentType;
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -73,13 +70,22 @@ typedef enum {
 ili9341_t *_screen;
 player_t players[NUM_PLAYERS] = {0};
 
-
 UART_State uart_state = STATE_IDLE;
-uint8_t dma_tx_buffer[UART_BUFFER_SIZE];      	  // buffer for DMA transmision
-uint8_t uart_buffer[UART_BUFFER_SIZE]; 	// buffer for RX
-uint8_t received_byte = 0;                   			// temporary storage for received byte
-uint16_t buffer_index = 0;                   			// current position in RX buffer
+uint8_t rx_byte; 
+uint8_t rx_data_size=0;
+uint8_t buffer[UART_BUFFER_SIZE];
+uint16_t buffer_index = 0;
 
+volatile static uint8_t rx_data[UART_BUFFER_SIZE];
+volatile static uint8_t rx_size;
+volatile static int reception_complete;
+
+volatile static int transmission_complete=1;
+uint8_t static tx_buffer[UART_BUFFER_SIZE];
+uint8_t static size_tx;
+
+
+             			
 //--ACCELERO--//
 uint8_t data_buffer[6];
 int scale_factor=16384;
@@ -103,7 +109,7 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 // Game.c or main.c
-void Game_Update(void);
+
 void Check_who_am_i(){
 	uint8_t who_am_i=0;
 	HAL_StatusTypeDef res;
@@ -170,7 +176,7 @@ void Configure_MPU6050() {
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     if (GPIO_Pin == GPIO_PIN_11) {
 				flag+=1;
-			if (flag-30==0){
+			if (flag-5000==0){
 				flag=0;
 					if (hi2c1.State == HAL_I2C_STATE_READY) {
 							if (HAL_I2C_Mem_Read_DMA(&hi2c1, MPU6050_ADDR << 1, 0x3B, I2C_MEMADD_SIZE_8BIT, data_buffer, 6) != HAL_OK) {
@@ -206,97 +212,155 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {
 
 
 
-void Handle_Received_Message(uint8_t *buffer, uint16_t size) {
-    // Echo back received message via UART5
-    //HAL_UART_Transmit(&huart5, buffer, size, HAL_MAX_DELAY);
+
+
+
+
+
+
+
+void print_data(uint8_t *table, int size){
+
+	printf("{");
+
+	for (int i=0; i<size; i++){
+		printf("%d, ",table[i]);
+	}
 	
-    printf("Received Message: ");
-    for (uint16_t i = 0; i < size; i++) {
-        printf("%c", buffer[i]);
-    }
-    printf("\n");
+	printf("}\r\n");
 }
 
-void UART_Receive_Handler(uint8_t byte) {
-		printf("byte:%b",byte);
-    switch (uart_state) {
-        case STATE_IDLE:
-						
-            if (byte == START_BYTE) {
-							uart_state = STATE_NEW_TRANSMISSION;
-								
-                buffer_index = 0;
-            }
-            break;
-
-        case STATE_NEW_TRANSMISSION:
-						
-            if (buffer_index < UART_BUFFER_SIZE) {
-							printf("byte:%b",byte);
-                uart_buffer[buffer_index++] = byte;
-                uart_state = STATE_RECEIVE;
-            } else {
-                uart_state = STATE_IDLE; // Buffer overflow
-            }
-            break;
-
-        case STATE_RECEIVE:
-						
-            if (buffer_index < UART_BUFFER_SIZE) {
-								printf("STATE_RECEIVE");
-                uart_buffer[buffer_index++] = byte;
-            } else {
-                uart_state = STATE_IDLE; // Buffer overflow
-            }
-            if (byte == '\n') {
-                Handle_Received_Message(uart_buffer, buffer_index);
-                uart_state = STATE_IDLE;
-            }
-            break;
-
-        default:
-            uart_state = STATE_IDLE;
-            break;
+void copy_array(volatile uint8_t *dest, const uint8_t *src, uint8_t size) {
+  
+    for (uint8_t i = 0; i < size; i++) {
+        dest[i] = src[i];
     }
 }
+
+
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-    if (huart->Instance == UART5) {
-			
-				printf("RX interrupt triggered Received: %c\n", received_byte);
-        UART_Receive_Handler(received_byte);
-        HAL_UART_Receive_IT(&huart5, &received_byte, 1); // Restart interrupt
+    if (huart->Instance == UART5) { // Vérifiez que l'interruption provient d'UART5
+        switch (uart_state) {
+						
+            case STATE_IDLE:
+                if (rx_byte == 0xFF) { // Debut d'une nouvelle transmission
+                    uart_state = STATE_NEW_TRANSMISSION;
+                    buffer_index = 0; // Reinitialise le buffer
+                }
+                break;
+
+            case STATE_NEW_TRANSMISSION:
+                if (rx_byte <= UART_BUFFER_SIZE) {
+                    uart_state = STATE_RECEIVE; // Passe de l'etat de reception continue
+										rx_data_size=rx_byte;
+                } else {
+                    uart_state = STATE_IDLE; // le buffer ne peut pas stocker tout l'info
+                }
+                break;
+
+            case STATE_RECEIVE:
+                if (buffer_index < rx_data_size-1) {
+                    buffer[buffer_index++] = rx_byte;
+                } else {
+										buffer[buffer_index++] = rx_byte;
+                    uart_state = STATE_IDLE; // toutes les donnees recues
+										copy_array(rx_data,buffer,rx_data_size);
+										rx_size=rx_data_size;
+										
+										reception_complete = 1;
+                }
+								
+                break;
+        }
+
+        
     }
+		
+		// Relancer la reception pour le prochain byte
+    HAL_UART_Receive_IT(&huart5, &rx_byte, 1);
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == UART5) {
-        printf("DMA TX Complete\n");
+        transmission_complete = 1; // Reinitialise le flag pour autoriser un nouvel envoi
     }
 }
 
-void Send_Message(const uint8_t *message, uint16_t size, uint16_t content_type) {
-		if (size + 4 > UART_BUFFER_SIZE) {
-    printf("Error: Message too large\n");
-    return;
-		}
-    
-    uint8_t full_message[UART_BUFFER_SIZE];
-    full_message[0] = START_BYTE;       // Start byte
-		full_message[1] = content_type;    // Content type (position)
-		memcpy(&full_message[2], message, size);
-		full_message[2 + size] = '\n';
-		HAL_UART_Transmit_DMA(&huart5, full_message, size + 4);
-		printf("full_message (decimal): ");
-    for (uint16_t i = 0; i < size + 3; i++) { // size + 3 = START_BYTE + CONTENT_TYPE + PAYLOAD + '\n'
-        printf("%d ", full_message[i]);
+
+void send_data(uint8_t *data, uint8_t size) {
+    // V�rifiez que la taille des donn�es est valide
+    if (size + 2 > UART_BUFFER_SIZE) {
+        return;
     }
-    printf("\n");
 		
+		if (!transmission_complete){
+			return;
+		}
+
+    // Pr�parer le buffer
+    tx_buffer[0] = 0xFF;  // Bit de debut
+    tx_buffer[1] = size;  // Taille des donn�es
+    for (uint8_t i = 0; i < size; i++) {
+        tx_buffer[i + 2] = data[i]; // Copiez les donn�es dans le buffer
+				//printf("tx_buffer:%d",data[i]);
+    }
+		
+    // Envoyer les donn�es avec DMA
+    HAL_UART_Transmit_DMA(&huart5, tx_buffer, size + 2);
+}
+void send_position(player_t* player){
+		
+			uint8_t data[4]; 
+
+			
+			data[0] = (uint8_t)(player->current_pos.x & 0xFF);       
+			data[1] = (uint8_t)((player->current_pos.x >> 8) & 0xFF); 
+
+			
+			data[2] = (uint8_t)(player->current_pos.y & 0xFF);       
+			data[3] = (uint8_t)((player->current_pos.y >> 8) & 0xFF);
+	
+		
+			
+			//print_data(data,sizeof(data));
+			send_data(data, 4);
+			
+}
+void get_enemy_position(const volatile uint8_t *data, player_t* enemy, int *status) {
+    if (data == NULL || enemy == NULL ) {
+		*status=0;
+        return; 
+    }
+		
+		//enemy->previous_pos=enemy->current_pos;
+		
+    
+    enemy->current_pos.x = (int16_t)(data[0] | (data[1] << 8));
+
+    enemy->current_pos.y = (int16_t)(data[2] | (data[3] << 8));
+		//printf("get_enemy_position");
+		
+
+
+	*status=1;
+}
+
+int receive_position(player_t* enemy){
+	if(reception_complete){
+		reception_complete=0;
+		if (rx_size==4){
+			int status=0;
+			get_enemy_position(rx_data,enemy, &status);
+			return status;
+		}
+	}
+		
+		return 0;
+
 }
 
 
-/* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
@@ -334,12 +398,13 @@ int main(void)
   MX_I2C1_Init();
   MX_UART5_Init();
   MX_TIM14_Init();
-	printf("Starting UART COMMUNICATION Example\n");
-  HAL_UART_Receive_IT(&huart5, &received_byte, 1);
+
+  
+	HAL_UART_Receive_IT(&huart5, &rx_byte, 1);
 	HAL_TIM_Base_Start_IT(&htim14);
   /* USER CODE BEGIN 2 */
-	//Check_who_am_i();
-	//Configure_MPU6050();
+	Check_who_am_i();
+	Configure_MPU6050();
 	HAL_Delay(500);
 	// Initialize the screen
 	_screen = ili9341_new(
@@ -363,26 +428,37 @@ int main(void)
 	player_t* player = &players[LOCAL_PLAYER_ID];
 	player_t* enemy = &players[ENEMY_PLAYER_ID];
 	
-	int16_t x = 0, y = 0;
-		x = 11;
-		y = 12;
-		int16_t position_data[2] = {x, y};
-	  Send_Message((uint8_t *)position_data, sizeof(position_data), POSITION);
+	 int16_t x = 0, y = 0;
+	 player_t* local_player = &players[LOCAL_PLAYER_ID];
+   player_t* enemy_player = &players[ENEMY_PLAYER_ID];
+    /* Initialize test positions */
+   
 	
+	
+	/*Set initial positions 
+   player->current_pos.x = 10; // Example initial position
+   player->current_pos.y = 20;*/
 		
 	/* Infinite loop */
+	uint8_t test_array[4] = {22, 34, 55, 11};
   while (1)
   {
+		send_data(test_array, sizeof(test_array));
+		print_data(rx_data,rx_data_size);
+		HAL_Delay(50);
+		
+	
     /* USER CODE END WHILE */
-		//Handle_Received_Message(uart_buffer,sizeof(uart_buffer));
-		//HAL_Delay(500);
+
     /* USER CODE BEGIN 3 */
 		//HAL_Delay(20); // � remplacer avec un timer
+		
+		
 
 		
+			
 		
-		
-		if (flag20==10){
+		if (flag20==100){
 			
 			switch(game_state) {
 			case CHOOSE_PLAYER:
@@ -447,13 +523,13 @@ int main(void)
 				}
 				y -= delta_y;
 				
-				/*int16_t position_data[2] = {x, y};
-				Send_Message((uint8_t *)position_data, sizeof(position_data), POSITION);
-				printf("uart_buffer[0]: %d,", uart_buffer[0]);
-				if (uart_buffer[0]==1){
-					enemy->current_pos.x=(int16_t)(uart_buffer[1] << 8 | uart_buffer[2]);
-					enemy->current_pos.y=(int16_t)(uart_buffer[3] << 8 | uart_buffer[4]);
-					printf("Received Position: x = %d, y = %d\n", x, y);}*/
+				send_position(player);	
+				
+				if (receive_position(enemy)==1){
+					drawRemotePlayer(_screen,enemy);
+				
+				}
+				
 				if(updatePosition(_screen, (position_t){x, y}, players)){
 					game_state = BATTLE;
 					flag20=0;
