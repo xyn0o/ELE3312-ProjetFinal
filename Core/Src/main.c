@@ -56,7 +56,7 @@ typedef enum {
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 //-----UART-----//
-#define UART_BUFFER_SIZE 32
+#define UART_BUFFER_SIZE 255
 #define START_BYTE 0xFF
 //----ACCELERO-----//
 #define MPU6050_ADDR 0x68
@@ -209,6 +209,7 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {
 void Handle_Received_Message(uint8_t *buffer, uint16_t size) {
     // Echo back received message via UART5
     //HAL_UART_Transmit(&huart5, buffer, size, HAL_MAX_DELAY);
+	
     printf("Received Message: ");
     for (uint16_t i = 0; i < size; i++) {
         printf("%c", buffer[i]);
@@ -217,16 +218,21 @@ void Handle_Received_Message(uint8_t *buffer, uint16_t size) {
 }
 
 void UART_Receive_Handler(uint8_t byte) {
+		printf("byte:%b",byte);
     switch (uart_state) {
         case STATE_IDLE:
+						
             if (byte == START_BYTE) {
-                uart_state = STATE_NEW_TRANSMISSION;
+							uart_state = STATE_NEW_TRANSMISSION;
+								
                 buffer_index = 0;
             }
             break;
 
         case STATE_NEW_TRANSMISSION:
+						
             if (buffer_index < UART_BUFFER_SIZE) {
+							printf("byte:%b",byte);
                 uart_buffer[buffer_index++] = byte;
                 uart_state = STATE_RECEIVE;
             } else {
@@ -235,7 +241,9 @@ void UART_Receive_Handler(uint8_t byte) {
             break;
 
         case STATE_RECEIVE:
+						
             if (buffer_index < UART_BUFFER_SIZE) {
+								printf("STATE_RECEIVE");
                 uart_buffer[buffer_index++] = byte;
             } else {
                 uart_state = STATE_IDLE; // Buffer overflow
@@ -255,7 +263,7 @@ void UART_Receive_Handler(uint8_t byte) {
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == UART5) {
 			
-				printf("RX interrupt triggered"); // Received: %c\n", received_byte);
+				printf("RX interrupt triggered Received: %c\n", received_byte);
         UART_Receive_Handler(received_byte);
         HAL_UART_Receive_IT(&huart5, &received_byte, 1); // Restart interrupt
     }
@@ -263,7 +271,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == UART5) {
-        //printf("DMA TX Complete\n");
+        printf("DMA TX Complete\n");
     }
 }
 
@@ -326,11 +334,12 @@ int main(void)
   MX_I2C1_Init();
   MX_UART5_Init();
   MX_TIM14_Init();
-	
+	printf("Starting UART COMMUNICATION Example\n");
+  HAL_UART_Receive_IT(&huart5, &received_byte, 1);
 	HAL_TIM_Base_Start_IT(&htim14);
   /* USER CODE BEGIN 2 */
-	Check_who_am_i();
-	Configure_MPU6050();
+	//Check_who_am_i();
+	//Configure_MPU6050();
 	HAL_Delay(500);
 	// Initialize the screen
 	_screen = ili9341_new(
@@ -355,8 +364,8 @@ int main(void)
 	player_t* enemy = &players[ENEMY_PLAYER_ID];
 	
 	int16_t x = 0, y = 0;
-		x = 258;
-		y = 4;
+		x = 11;
+		y = 12;
 		int16_t position_data[2] = {x, y};
 	  Send_Message((uint8_t *)position_data, sizeof(position_data), POSITION);
 	
@@ -365,7 +374,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	
+		//Handle_Received_Message(uart_buffer,sizeof(uart_buffer));
+		//HAL_Delay(500);
     /* USER CODE BEGIN 3 */
 		//HAL_Delay(20); // � remplacer avec un timer
 
