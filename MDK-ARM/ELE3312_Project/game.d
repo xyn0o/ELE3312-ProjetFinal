@@ -24,7 +24,10 @@ ele3312_project/game.o: ..\Core\Src\Game.c ..\Core\Inc\Game.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr_ex.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_spi.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h \
   ..\Core\Inc\ili9341_gfx.h ..\Core\Inc\ili9341_font.h \
   ..\Core\Inc\Character.h ..\Core\Inc\sprite_meta.h \
-  ..\Core\Inc\sprite_data.h ..\Core\Inc\maze.h
+  ..\Core\Inc\sprite_data.h ..\Core\Inc\maze.h ..\Core\Inc\usart.h \
+  ..\Core\Inc\main.h

@@ -5,6 +5,7 @@
 
 #include "Menu.h"
 extern volatile float accel_x;
+extern volatile int flag20;
 
 /**
 * @brief The function draws the two possible players (Pac-Man or Ghost) on the screen. 
@@ -45,41 +46,43 @@ void choosePlayer(ili9341_t *lcd, player_t* players){
   const float alpha = 0.5f; // Smoothing factor for low-pass filter
 
 	while(chosen_character.type == NONE) {
-		HAL_Delay(20); // À remplacer avec un timer
+		//HAL_Delay(20); // À remplacer avec un timer
 		//printf("La valeur de accel_x est: %f\n", accel_x);
-		
-		float accel_x_copy = accel_x;
-		filtered_accel_x = alpha * accel_x_copy + (1 - alpha) * filtered_accel_x;
-		float threshold = 0.2f;     
-    float sensitivity = 4.0f;
-		
-		/*if (filtered_accel_x > threshold) {
-            // Tilted to the right
-            cursor_pos.x -= (filtered_accel_x - threshold) * sensitivity;
-    } else if (filtered_accel_x < -threshold) {
-            // Tilted to the left
-            cursor_pos.x -= (filtered_accel_x + threshold) * sensitivity;
-    }
-		*/
-		cursor_pos.x += 0.5 * STEP_SIZE; // Mise à jour de la position du curseur
-		
-		ili9341_fill_rect(lcd, ILI9341_BLACK, old_cursor_pos.x, old_cursor_pos.y, checkfill_size, checkfill_size);
-		ili9341_fill_rect(lcd, ILI9341_WHITE, cursor_pos.x, cursor_pos.y, checkfill_size, checkfill_size);
-		old_cursor_pos = cursor_pos;
-		
-		uint8_t pacman_chosen = cursor_pos.x >= pacman_icon_pos.x + checkbox_size + 10;
-		if (pacman_chosen) {
-			chosen_character = pacman;
-			ili9341_fill_rect(lcd, ILI9341_BLACK, pacman_icon_pos.x + 35, 180, checkbox_size, checkbox_size);
-			ili9341_draw_rect(lcd, pacman.color, pacman_icon_pos.x + 35, 180, checkbox_size, checkbox_size);
-			ili9341_fill_rect(lcd, pacman.color, pacman_icon_pos.x + 40, cursor_pos.y, checkfill_size, checkfill_size);
-		}
-		uint8_t ghost_chosen = cursor_pos.x <= ghost_icon_pos.x + checkbox_size + 10;
-		if (ghost_chosen) {
-			chosen_character = ghost;
-			ili9341_fill_rect(lcd, ILI9341_BLACK, ghost_icon_pos.x + 35, 180, checkbox_size, checkbox_size);
-			ili9341_draw_rect(lcd, ghost.color, ghost_icon_pos.x + 35, 180, checkbox_size, checkbox_size);
-			ili9341_fill_rect(lcd, ghost.color, ghost_icon_pos.x + 40, cursor_pos.y, checkfill_size, checkfill_size);
+		if (flag20==1){
+			float accel_x_copy =accel_x;
+			filtered_accel_x = alpha * accel_x_copy + (1 - alpha) * filtered_accel_x;
+			float threshold = 0.2f;     
+			float sensitivity = 4.0f;
+			
+			if (filtered_accel_x > threshold) {
+							// Tilted to the right
+							cursor_pos.x -= (filtered_accel_x - threshold) * sensitivity;
+			} else if (filtered_accel_x < -threshold) {
+							// Tilted to the left
+							cursor_pos.x -= (filtered_accel_x + threshold) * sensitivity;
+			}
+			
+			//cursor_pos.x += 0.5 * STEP_SIZE; // Mise à jour de la position du curseur
+			
+			ili9341_fill_rect(lcd, ILI9341_BLACK, old_cursor_pos.x, old_cursor_pos.y, checkfill_size, checkfill_size);
+			ili9341_fill_rect(lcd, ILI9341_WHITE, cursor_pos.x, cursor_pos.y, checkfill_size, checkfill_size);
+			old_cursor_pos = cursor_pos;
+			
+			uint8_t pacman_chosen = cursor_pos.x >= pacman_icon_pos.x + checkbox_size + 10;
+			if (pacman_chosen) {
+				chosen_character = pacman;
+				ili9341_fill_rect(lcd, ILI9341_BLACK, pacman_icon_pos.x + 35, 180, checkbox_size, checkbox_size);
+				ili9341_draw_rect(lcd, pacman.color, pacman_icon_pos.x + 35, 180, checkbox_size, checkbox_size);
+				ili9341_fill_rect(lcd, pacman.color, pacman_icon_pos.x + 40, cursor_pos.y, checkfill_size, checkfill_size);
+			}
+			uint8_t ghost_chosen = cursor_pos.x <= ghost_icon_pos.x + checkbox_size + 10;
+			if (ghost_chosen) {
+				chosen_character = ghost;
+				ili9341_fill_rect(lcd, ILI9341_BLACK, ghost_icon_pos.x + 35, 180, checkbox_size, checkbox_size);
+				ili9341_draw_rect(lcd, ghost.color, ghost_icon_pos.x + 35, 180, checkbox_size, checkbox_size);
+				ili9341_fill_rect(lcd, ghost.color, ghost_icon_pos.x + 40, cursor_pos.y, checkfill_size, checkfill_size);
+			}
+			flag20=0;
 		}
 	}
 	

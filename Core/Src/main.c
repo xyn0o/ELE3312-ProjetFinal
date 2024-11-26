@@ -19,6 +19,7 @@
 #include "dma.h"
 #include "i2c.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -35,6 +36,7 @@
 #include "Game.h"
 #include "Battle.h"
 #include "stdio.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,8 +50,10 @@ typedef enum {
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+//-----UART-----//
 #define UART_BUFFER_SIZE 32
 #define START_BYTE 0xFF
+//----ACCELERO-----//
 #define MPU6050_ADDR 0x68
 /* USER CODE END PD */
 
@@ -71,36 +75,30 @@ uint8_t uart_buffer[UART_BUFFER_SIZE];       // buffer for RX
 uint8_t received_byte = 0;                   // temporary storage for received byte
 uint16_t buffer_index = 0;                   // current position in RX buffer
 
+//--ACCELERO--//
 uint8_t data_buffer[6];
-int scale_factor;
-
+int scale_factor=16384;
+volatile int flag=0;
 volatile float accel_x = 0.0f;
 volatile float accel_y = 0.0f;
 volatile float accel_z = 0.0f;
+volatile int flag20=0;
+
+volatile float filtered_accel_x = 0.0f;
+volatile float filtered_accel_y = 0.0f;
+const float alpha = 0.3f; 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 
-//-------UART-------//
-void Handle_Received_Message(uint8_t *buffer, uint16_t size);
-void Send_Message(const uint8_t *message, uint16_t size);
-void UART_Receive_Handler(uint8_t byte);
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart);
-
-//------ACCELEROMETRE------//
-void Check_who_am_i();
-void Configure_MPU6050();
-
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-
+// Game.c or main.c
+void Game_Update(void);
 void Check_who_am_i(){
 	uint8_t who_am_i=0;
 	HAL_StatusTypeDef res;
@@ -135,7 +133,7 @@ void Configure_MPU6050() {
 
     
     // PWR_MGMT_1 : Sélection de l'horloge interne
-    pwr_mgmt_1_value = 0x08;
+    pwr_mgmt_1_value = 0x00;
     ret = HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR << 1, 0x6B, I2C_MEMADD_SIZE_8BIT, &pwr_mgmt_1_value, 1, HAL_MAX_DELAY);
 		if (ret != HAL_OK) printf("Erreur de configuration PWR_MGMT_1, ret = %d\r\n", ret);
 		
@@ -148,7 +146,6 @@ void Configure_MPU6050() {
 
     // ACCEL_CONFIG : AFS_SEL = ±2g, désactiver Selftest
     uint8_t accel_config_value = 0b00000000;
-		scale_factor=16384;
     ret = HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR << 1, 0x1C, I2C_MEMADD_SIZE_8BIT, &accel_config_value, 1, HAL_MAX_DELAY);
     if (ret != HAL_OK) printf("Erreur de configuration ACCEL_CONFIG\r\n");
 
@@ -165,38 +162,41 @@ void Configure_MPU6050() {
     printf("Configuration du MPU-6050 terminee.\r\n");
 }
 
-
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     if (GPIO_Pin == GPIO_PIN_11) {
         if (hi2c1.State == HAL_I2C_STATE_READY) {
-            HAL_I2C_Mem_Read_DMA(&hi2c1, MPU6050_ADDR << 1, 0x3B, I2C_MEMADD_SIZE_8BIT, data_buffer, 6);
-           
+            if (HAL_I2C_Mem_Read_DMA(&hi2c1, MPU6050_ADDR << 1, 0x3B, I2C_MEMADD_SIZE_8BIT, data_buffer, 6) != HAL_OK) {
+                printf("I2C read error!\r\n");
+            }
         }
     }
 }
 
 
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {
+		
     if (hi2c->Instance == I2C1) {
-				int16_t raw_accel_x = (data_buffer[0] << 8) | data_buffer[1];
-        int16_t raw_accel_y = (data_buffer[2] << 8) | data_buffer[3];
-        int16_t raw_accel_z = (data_buffer[4] << 8) | data_buffer[5];
+			flag+=1;
+			if (flag-200==0){
+				flag=0;
 			
-				accel_x=(float)raw_accel_x/scale_factor;
-				//accel_x=(float)raw_accel_x/scale_factor;
-				//accel_y=(float)raw_accel_y/scale_factor;
-				//accel_z=(float)raw_accel_z/scale_factor;
-       
-				//printf("data_buffer: %02X %02X %02X %02X %02X %02X\r\n", data_buffer[0], data_buffer[1], data_buffer[2], data_buffer[3], data_buffer[4], data_buffer[5]);
 				
+			
+				int16_t raw_accel_x = (data_buffer[0] << 8) | data_buffer[1];
+				int16_t raw_accel_y = (data_buffer[2] << 8) | data_buffer[3];
+				int16_t raw_accel_z = (data_buffer[4] << 8) | data_buffer[5];
+		
+				accel_x=(float)raw_accel_x/scale_factor;
+				accel_y=(float)raw_accel_y/scale_factor;
+				accel_z=(float)raw_accel_z/scale_factor;
+				//printf("x,y,z: %.2f  %.2f  %.2f \r\n",accel_x, accel_y,accel_z); 
+			}
 				
     }
 }
-*
 
 
-
-/*void Handle_Received_Message(uint8_t *buffer, uint16_t size) {
+void Handle_Received_Message(uint8_t *buffer, uint16_t size) {
     // Echo back received message via UART5
     //HAL_UART_Transmit(&huart5, buffer, size, HAL_MAX_DELAY);
     printf("Received Message: ");
@@ -205,7 +205,6 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {
     }
     printf("\n");
 }
-
 void UART_Receive_Handler(uint8_t byte) {
     switch (uart_state) {
         case STATE_IDLE:
@@ -253,18 +252,32 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == UART5) {
         //printf("DMA TX Complete\n");
     }
-	}
-	
-	*/
+}
+void Send_Message(const uint8_t *message, uint16_t size,uint16_t content_type) {
+    if (size + 4 > UART_BUFFER_SIZE) {
+        printf("Error: Message too large\n");
+        return;
+    }
+
+    uint8_t full_message[UART_BUFFER_SIZE];
+    full_message[0] = START_BYTE;
+		full_message[1] = content_type;
+    memcpy(&full_message[2], message, size);
+    full_message[2 + size] = '\n';
+		HAL_UART_Transmit_DMA(&huart5, full_message, size + 4);
+
+    /*if (HAL_UART_Transmit_DMA(&huart5, full_message, size + 2) != HAL_OK) {
+        printf("Error: DMA transmission failed.\n");
+    }*/
+}
 /* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
   * @retval int
-  **/
-		
-		
-int main(void){
+  */
+int main(void)
+{
 
   /* USER CODE BEGIN 1 */
 
@@ -274,10 +287,10 @@ int main(void){
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-	HAL_Delay(500);
+	HAL_Delay(100);
   /* USER CODE BEGIN Init */
 	/* Default players setting */
-	static game_state_t game_state = CHOOSE_PLAYER;
+	volatile  game_state_t game_state = CHOOSE_PLAYER;
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -290,20 +303,17 @@ int main(void){
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-
   MX_SPI1_Init();
   MX_USART2_UART_Init();
-	
   MX_I2C1_Init();
-	HAL_Delay(1000);
-	
   MX_UART5_Init();
+  MX_TIM14_Init();
 	
+	HAL_TIM_Base_Start_IT(&htim14);
+  /* USER CODE BEGIN 2 */
 	Check_who_am_i();
 	Configure_MPU6050();
-	
-  /* USER CODE BEGIN 2 */
-	
+	HAL_Delay(500);
 	// Initialize the screen
 	_screen = ili9341_new(
 		  &hspi1,
@@ -318,7 +328,6 @@ int main(void){
 	char text[40];
 	ili9341_text_attr_t text_attr = {&ili9341_font_11x18,  ILI9341_WHITE, ILI9341_BLACK, 10, 0};
 	ili9341_fill_screen(_screen, ILI9341_BLACK);
-	HAL_Delay(1000);
 	
   /* USER CODE END 2 */
 
@@ -329,67 +338,93 @@ int main(void){
 	
 	int16_t x = 0, y = 0;
 	
-	
-	/*HAL_StatusTypeDef status = HAL_I2C_IsDeviceReady(&hi2c1, MPU6050_ADDR<<1, 1, 100);
-	HAL_Delay(1000);
-	if (status == HAL_OK) {
-			printf("Device is ready.\n");
-	} else if (status == HAL_ERROR) {
-			printf("Error: Device is not ready.\n");
-	} else if (status == HAL_BUSY) {
-			printf("Device is busy.\n");
-	} else if (status == HAL_TIMEOUT) {
-			printf("Operation timed out.\n");
-	} else {
-			printf("Unknown status.\n");
-	}
-	*/
 	/* Infinite loop */
   while (1)
   {
     /* USER CODE END WHILE */
-
+	
     /* USER CODE BEGIN 3 */
-		HAL_Delay(20); // � remplacer avec un timer
+		//HAL_Delay(20); // � remplacer avec un timer
 		
-		switch(game_state) {
-		case CHOOSE_PLAYER:
-
-		choosePlayer(_screen, players);
-			game_state = INIT_MAZE;
-			break;
-		
-		case INIT_MAZE:
-			player->current_pos = player->start_pos;
-			enemy->current_pos = enemy->start_pos;
-			drawMaze(_screen, players);			
-			game_state = WANDER_MAZE;
-			break;
+		if (flag20==1){
 			
-		case WANDER_MAZE:
-			// Obtenir la nouvelle position d�sir�e
-			x = player->current_pos.x;
-			y = player->current_pos.y + 0.5 * STEP_SIZE;
-			// Obtenir et mettre à jour la position de l'adversaire
-			// ...
-			// Vérifier la rencontre avec l'adversaire
-			if(updatePosition(_screen, (position_t){x, y}, players)){
-				game_state = BATTLE;
-				continue;
-			}
-			break;
+			switch(game_state) {
+			case CHOOSE_PLAYER:
+				choosePlayer(_screen, players);
+				game_state = INIT_MAZE;
+				flag20=0;
+				break;
 			
-		case BATTLE:
-			battle(_screen, players);
-			game_state = INIT_MAZE;
-			break;
-		}
-		
-		
-		
+			case INIT_MAZE:
+				player->current_pos = player->start_pos;
+				enemy->current_pos = enemy->start_pos;
+				drawMaze(_screen, players);			
+				game_state = WANDER_MAZE;
+				flag20=0;
+				break;
 				
-  }
+			case WANDER_MAZE:
+				flag20=0;
 
+				while(flag20==0);
+				float accel_x_copy = accel_x;
+				float accel_y_copy = accel_y;
+
+				
+				filtered_accel_x = alpha * accel_x_copy + (1 - alpha) * filtered_accel_x;
+				filtered_accel_y = alpha * accel_y_copy + (1 - alpha) * filtered_accel_y;
+				float threshold = 0.01f;    // Low threshold for high sensitivity
+				float sensitivity = 5.0f;  // Adjust sensitivity to control responsiveness
+				float max_speed = 3.0f;
+			
+				
+				x = player->current_pos.x;
+				y = player->current_pos.y;
+
+				float delta_x = 0.0f;
+				float delta_y = 0.0f;
+
+			
+				if (filtered_accel_x > threshold) {
+						delta_x = (filtered_accel_x - threshold) * sensitivity;
+				} else if (filtered_accel_x < -threshold) {
+						delta_x = (filtered_accel_x + threshold) * sensitivity;
+				}
+				if (delta_x > max_speed) {
+						delta_x = max_speed;
+				} else if (delta_x < -max_speed) {
+						delta_x = -max_speed;
+				}
+				x -= delta_x;
+				if (filtered_accel_y > threshold) {
+						delta_y = -(filtered_accel_y - threshold) * sensitivity; // Adjust sign based on coordinate system
+				} else if (filtered_accel_y < -threshold) {
+						delta_y = -(filtered_accel_y + threshold) * sensitivity;
+				}
+				if (delta_y > max_speed) {
+						delta_y = max_speed;
+				} else if (delta_y < -max_speed) {
+						delta_y = -max_speed;
+				}
+				y -= delta_y;
+					
+			
+
+				if(updatePosition(_screen, (position_t){x, y}, players)){
+					game_state = BATTLE;
+					flag20=0;
+					continue;
+				}
+				flag20=0;
+				break;
+			case BATTLE:
+				battle(_screen, players);
+				game_state = INIT_MAZE;
+				flag20=0;
+				break;
+		}
+	}
+  }
   /* USER CODE END 3 */
 }
 
@@ -446,6 +481,17 @@ int fputc(int ch, FILE *f)
   HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
   return ch;
 }
+
+
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+    if (htim->Instance == TIM14)
+    {
+        flag20=1;
+    }
+}
+
 /* USER CODE END 4 */
 
 /**

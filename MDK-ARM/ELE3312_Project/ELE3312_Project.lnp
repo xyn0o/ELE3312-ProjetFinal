@@ -12,6 +12,7 @@
 "ele3312_project\dma.o"
 "ele3312_project\i2c.o"
 "ele3312_project\spi.o"
+"ele3312_project\tim.o"
 "ele3312_project\usart.o"
 "ele3312_project\stm32f4xx_it.o"
 "ele3312_project\stm32f4xx_hal_msp.o"

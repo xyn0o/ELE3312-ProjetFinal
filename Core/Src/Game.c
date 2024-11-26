@@ -6,6 +6,13 @@
 #include "Game.h"
 #include "sprite_meta.h"
 #include "maze.h"
+#include "usart.h"   // Make sure this includes the declaration of huart2
+#include <stdio.h>   // For FILE definition
+
+extern UART_HandleTypeDef huart2; // Declare the UART handle
+
+int fputc(int ch, FILE *f);
+
 
 /**
 * @brief This function searches in an array of sprite metadata objects for the sprite with the specified ID.
@@ -146,6 +153,7 @@ void checkBoundary(int16_t x, int16_t y, player_t *players, uint16_t *maze, boun
 	player_t * pos = &players[LOCAL_PLAYER_ID];
 	player_t * enemy = &players[ENEMY_PLAYER_ID];
 	
+	
 	uint16_t enemy_tile_id = enemy->character.type == GHOST ? 16 : 13;
 	position_t enemy_pos = {0};
 
@@ -190,7 +198,6 @@ void checkBoundary(int16_t x, int16_t y, player_t *players, uint16_t *maze, boun
 	if(bc->is_x_ok == 0) {
 		bc->is_enemy |= x_col_1 == enemy_tile_id || x_col_2 == enemy_tile_id;
 	}
-
 	if(bc->is_y_ok == 0) {
 		bc->is_enemy |= y_col_1 == enemy_tile_id || y_col_2 == enemy_tile_id;
 	}
@@ -237,11 +244,11 @@ uint8_t updatePosition(ili9341_t *lcd, position_t new_pos, player_t* players) {
 			if(pos->current_pos.x < 10) {
 				pos->current_pos.x = SCREEN_X - 16;
 			}
-			if(pos->current_pos.y > SCREEN_Y - 10) {
-				pos->current_pos.y = 10;
+			if(pos->current_pos.y > SCREEN_Y - 14) {
+				pos->current_pos.y = 14;
 			}
 			if(pos->current_pos.y < 10) {
-				pos->current_pos.y = SCREEN_Y - 10;
+				pos->current_pos.y = SCREEN_Y - 14;
 			}
 
 			drawBitmap(lcd, sprite->data, pos->current_pos, sprite->width, sprite->height);

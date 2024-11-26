@@ -1,7 +1,5 @@
-ele3312_project/battle.o: ..\Core\Src\Battle.c ..\Core\Inc\Battle.h \
-  ..\Core\Inc\Character.h ..\Core\Inc\ili9341_gfx.h \
-  ..\Core\Inc\ili9341.h \
-  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h \
+ele3312_project/tim.o: ..\Core\Src\tim.c ..\Core\Inc\tim.h \
+  ..\Core\Inc\main.h ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h \
   ..\Core\Inc\stm32f4xx_hal_conf.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_def.h \
@@ -27,5 +25,4 @@ ele3312_project/battle.o: ..\Core\Src\Battle.c ..\Core\Inc\Battle.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_spi.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h \
-  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h \
-  ..\Core\Inc\ili9341_font.h ..\Core\Inc\Graphics.h ..\Core\Inc\Game.h
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h
