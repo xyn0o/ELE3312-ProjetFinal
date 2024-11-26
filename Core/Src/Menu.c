@@ -50,18 +50,18 @@ void choosePlayer(ili9341_t *lcd, player_t* players){
 		
 		float accel_x_copy = accel_x;
 		filtered_accel_x = alpha * accel_x_copy + (1 - alpha) * filtered_accel_x;
-		float threshold = 0.2f;     // Adjust as needed to prevent noise
+		float threshold = 0.2f;     
     float sensitivity = 4.0f;
 		
-		if (filtered_accel_x > threshold) {
+		/*if (filtered_accel_x > threshold) {
             // Tilted to the right
             cursor_pos.x -= (filtered_accel_x - threshold) * sensitivity;
     } else if (filtered_accel_x < -threshold) {
             // Tilted to the left
             cursor_pos.x -= (filtered_accel_x + threshold) * sensitivity;
     }
-		
-	//	cursor_pos.x += 0.5 * STEP_SIZE; // Mise à jour de la position du curseur
+		*/
+		cursor_pos.x += 0.5 * STEP_SIZE; // Mise à jour de la position du curseur
 		
 		ili9341_fill_rect(lcd, ILI9341_BLACK, old_cursor_pos.x, old_cursor_pos.y, checkfill_size, checkfill_size);
 		ili9341_fill_rect(lcd, ILI9341_WHITE, cursor_pos.x, cursor_pos.y, checkfill_size, checkfill_size);
@@ -87,5 +87,5 @@ void choosePlayer(ili9341_t *lcd, player_t* players){
 	players[ENEMY_PLAYER_ID].character = chosen_character.type == PACMAN ? ghost : pacman;
 	
 	HAL_Delay(1000);
-	ili9341_fill_screen(lcd, ILI9341_BLACK);
+	ili9341_fill_screen(lcd, ILI9341_PINK);
 }

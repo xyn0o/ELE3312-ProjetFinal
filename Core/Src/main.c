@@ -99,6 +99,8 @@ void Configure_MPU6050();
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+
 void Check_who_am_i(){
 	uint8_t who_am_i=0;
 	HAL_StatusTypeDef res;
@@ -181,19 +183,20 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {
         int16_t raw_accel_z = (data_buffer[4] << 8) | data_buffer[5];
 			
 				accel_x=(float)raw_accel_x/scale_factor;
-				accel_y=(float)raw_accel_y/scale_factor;
-				accel_z=(float)raw_accel_z/scale_factor;
+				//accel_x=(float)raw_accel_x/scale_factor;
+				//accel_y=(float)raw_accel_y/scale_factor;
+				//accel_z=(float)raw_accel_z/scale_factor;
        
 				//printf("data_buffer: %02X %02X %02X %02X %02X %02X\r\n", data_buffer[0], data_buffer[1], data_buffer[2], data_buffer[3], data_buffer[4], data_buffer[5]);
 				
 				
     }
 }
+*
 
 
 
-
-void Handle_Received_Message(uint8_t *buffer, uint16_t size) {
+/*void Handle_Received_Message(uint8_t *buffer, uint16_t size) {
     // Echo back received message via UART5
     //HAL_UART_Transmit(&huart5, buffer, size, HAL_MAX_DELAY);
     printf("Received Message: ");
@@ -251,6 +254,8 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
         //printf("DMA TX Complete\n");
     }
 	}
+	
+	*/
 /* USER CODE END 0 */
 
 /**
@@ -269,7 +274,7 @@ int main(void){
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
+	HAL_Delay(500);
   /* USER CODE BEGIN Init */
 	/* Default players setting */
 	static game_state_t game_state = CHOOSE_PLAYER;
@@ -290,13 +295,13 @@ int main(void){
   MX_USART2_UART_Init();
 	
   MX_I2C1_Init();
-	
+	HAL_Delay(1000);
 	
   MX_UART5_Init();
 	
 	Check_who_am_i();
 	Configure_MPU6050();
-	HAL_Delay(1000);
+	
   /* USER CODE BEGIN 2 */
 	
 	// Initialize the screen
@@ -312,7 +317,7 @@ int main(void){
 		  itnNormalized);
 	char text[40];
 	ili9341_text_attr_t text_attr = {&ili9341_font_11x18,  ILI9341_WHITE, ILI9341_BLACK, 10, 0};
-	ili9341_fill_screen(_screen, ILI9341_PINK);
+	ili9341_fill_screen(_screen, ILI9341_BLACK);
 	HAL_Delay(1000);
 	
   /* USER CODE END 2 */
