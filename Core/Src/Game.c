@@ -137,7 +137,10 @@ void drawMaze(ili9341_t *lcd, player_t *players) {
 * @return the value of the tile (possible values are ids of walls or special objects)
 */
 uint16_t getTileCoord(int16_t x, int16_t y) {
-	return *(maze + y*MAX_TILE_X + x);
+	if (x<0||x>=MAX_TILE_X||y<0||y>=MAX_TILE_Y){
+		return UINT16_MAX;
+	}
+	return*(maze + y*MAX_TILE_X + x);
 }
 
 /**

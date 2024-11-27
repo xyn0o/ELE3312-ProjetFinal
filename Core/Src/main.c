@@ -176,7 +176,7 @@ void Configure_MPU6050() {
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     if (GPIO_Pin == GPIO_PIN_11) {
 				flag+=1;
-			if (flag-5000==0){
+			if (flag-50==0){
 				flag=0;
 					if (hi2c1.State == HAL_I2C_STATE_READY) {
 							if (HAL_I2C_Mem_Read_DMA(&hi2c1, MPU6050_ADDR << 1, 0x3B, I2C_MEMADD_SIZE_8BIT, data_buffer, 6) != HAL_OK) {
@@ -327,38 +327,22 @@ void send_position(player_t* player){
 			send_data(data, 4);
 			
 }
-void get_enemy_position(const volatile uint8_t *data, player_t* enemy, int *status) {
-    if (data == NULL || enemy == NULL ) {
-		*status=0;
-        return; 
+void get_position(const volatile uint8_t *data, position_t *pos, int *status) {
+    if (data == NULL || pos == NULL) {
+        *status = 0; // Indicate failure
+        return;
     }
-		
-		//enemy->previous_pos=enemy->current_pos;
-		
-    
-    enemy->current_pos.x = (int16_t)(data[0] | (data[1] << 8));
 
-    enemy->current_pos.y = (int16_t)(data[2] | (data[3] << 8));
-		//printf("get_enemy_position");
-		
+    // Decode the position into the provided position_t struct
+    pos->x = (int16_t)(data[0] | (data[1] << 8));
+    pos->y = (int16_t)(data[2] | (data[3] << 8));
 
-
-	*status=1;
+    *status = 1; // Indicate success
 }
 
-int receive_position(player_t* enemy){
-	if(reception_complete){
-		reception_complete=0;
-		if (rx_size==4){
-			int status=0;
-			get_enemy_position(rx_data,enemy, &status);
-			return status;
-		}
-	}
-		
-		return 0;
 
-}
+
+
 
 
 
@@ -381,6 +365,8 @@ int main(void)
   /* USER CODE BEGIN Init */
 	/* Default players setting */
 	volatile  game_state_t game_state = CHOOSE_PLAYER;
+	
+	
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -429,46 +415,28 @@ int main(void)
 	player_t* enemy = &players[ENEMY_PLAYER_ID];
 	
 	 int16_t x = 0, y = 0;
-	 player_t* local_player = &players[LOCAL_PLAYER_ID];
-   player_t* enemy_player = &players[ENEMY_PLAYER_ID];
-    /* Initialize test positions */
+	
    
-	
-	
-	/*Set initial positions 
-   player->current_pos.x = 10; // Example initial position
-   player->current_pos.y = 20;*/
 		
 	/* Infinite loop */
-	uint8_t test_array[4] = {22, 34, 55, 11};
+	
   while (1)
   {
-		send_data(test_array, sizeof(test_array));
-		print_data(rx_data,rx_data_size);
-		HAL_Delay(50);
-		
-	
-    /* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
-		//HAL_Delay(20); // � remplacer avec un timer
-		
 		
 
 		
-			
-		
-		if (flag20==100){
+		if (flag20==1){
 			
 			switch(game_state) {
 			case CHOOSE_PLAYER:
 				choosePlayer(_screen, players);
-				uint16_t message;
 				game_state = INIT_MAZE;
 				flag20=0;
 				break;
 			
 			case INIT_MAZE:
+				
 				player->current_pos = player->start_pos;
 				enemy->current_pos = enemy->start_pos;
 			
@@ -479,16 +447,25 @@ int main(void)
 				break;
 				
 			case WANDER_MAZE:
-				flag20=0;
+				position_t enemy_pos;
+				int status;
 
-				while(flag20==0);
+// Assume `data` is a valid pointer to the volatile uint8_t array
+				
+				get_position(rx_data, &enemy_pos, &status);
+				if (updatePosition(_screen, enemy_pos, enemy)){
+					drawRemotePlayer(_screen,enemy);
+				}
+					
+				
+				
 				float accel_x_copy = accel_x;
 				float accel_y_copy = accel_y;
 
 				
 				filtered_accel_x = alpha * accel_x_copy + (1 - alpha) * filtered_accel_x;
 				filtered_accel_y = alpha * accel_y_copy + (1 - alpha) * filtered_accel_y;
-				float threshold = 0.01f;    
+				float threshold = 0.005f;    
 				float sensitivity = 5.0f;  
 				float max_speed = 3.0f;
 			
@@ -525,12 +502,16 @@ int main(void)
 				
 				send_position(player);	
 				
-				if (receive_position(enemy)==1){
-					drawRemotePlayer(_screen,enemy);
+				
+				//receive_position(enemy);
+				/*if (receive_position(enemy)==1){
+				DrawRemotePlayer(_screen,enemy);
 				
 				}
+				*/
 				
-				if(updatePosition(_screen, (position_t){x, y}, players)){
+					
+				if(updatePosition(_screen, (position_t){x, y}, player)){
 					game_state = BATTLE;
 					flag20=0;
 					continue;
